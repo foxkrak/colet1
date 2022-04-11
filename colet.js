@@ -1,43 +1,164 @@
-const timer = ms => new Promise(res => setTimeout(res, ms))
- var hh = 0;
- var mm = 0;
- var ss = 0;
- var loop = true;
- var total = 0
- var m = 0;
- var s = 0;
- var ir = 0;
-while(loop == true){
-    var format = (hh < 10 ? '0' + hh : hh) + ':' + (mm < 10 ? '0' + mm : mm) + ':' + (ss < 10 ? '0' + ss : ss);
-    var format2 = (new Intl.NumberFormat('dec', { style: 'decimal' }).format(total));
-    $('#content_value').find('h2').text('[Auto Coleta] Tempo:' + ' ' + format + '⁣⁣        ⁣⁣' + 'Total de Recurso Coletado: ' + format2)
-    ss++;
-    if (ss == 60){
-        ss = 0;
-        mm++;
-        if(mm == 60){
-            mm = 0;
-            hh++;
+let teste = true;
+let principal;
+let secundario;
+const td = document.createElement('td');
+const tr1 = document.createElement('tr');
+const tr2 = document.createElement('tr');
+let hora;
+let intervalo;
+let RecursosColetados;
+let timerRodando;
+let format2;
+let cont = 0;
+var total = 0;
+var madeira = 0;
+var stone = 0;
+var iron = 0;
+let ss = 0;
+ss = JSON.parse(localStorage.getItem('TimerRodando'))
+total = JSON.parse(localStorage.getItem('TotalRecursoColetado'));
+format2 = (new Intl.NumberFormat('dec', { style: 'decimal' }).format(total));
+let totalDiv3 = Math.round(total / 3);
+let format3 = (new Intl.NumberFormat('dec', { style: 'decimal' }).format(totalDiv3));
+document.querySelector('#content_value').querySelector('h2').style.cssText = 'text-align: center'
+document.querySelector('#content_value').querySelector('img').style.display = 'none'
+document.querySelector('#content_value').querySelector('td').style.display = 'none'
+$('#content_value').find('h2').html('[Auto Coleta] Criado por Foxkrak</br></br>Tempo:' + ' ' + timer1(ss) + '⁣⁣      ' + 'Total de Recurso Coletado: ' + format2 + '</br></br>' + 'Madeira: ' + format3 + '&nbsp;&nbsp;&nbsp;Argila: ' + format3+ '&nbsp;&nbsp;&nbsp;Ferro: ' + format3)
+
+function resetar(){
+    total = JSON.parse(localStorage.getItem('TotalRecursoColetado'));
+}
+
+twcheese1();
+function twcheese1(){
+    javascript: (window.TwCheese && TwCheese.tryUseTool('ASS')) || $.ajax('https://cheesasaurus.github.io/twcheese/launch/ASS.js?' +~~((new Date())/3e5),{cache:1,dataType:"script"});void 0;
+    setTimeout(function(){document.querySelector('#content_value').querySelector('span').style.cssText = 'display: none;'},400)
+
+}
+
+function timer1(segundos){
+    const data = new Date(segundos * 1000);
+    return data.toLocaleTimeString('pt-BR', { hour12: false, timeZone: 'UTC' })
+}
+function inicarTimer(){
+    hora = setInterval(function(){
+        ss++
+        timerRodando = JSON.stringify(ss);
+        localStorage.setItem('TimerRodando', timerRodando);
+    },1000)
+}
+
+//*************************** CRIANDO OS ELEMENTOS CONFIGURANDO E DANDO FUNÇÃO ***************************//
+
+td.classList = 'opcoestd';
+document.querySelector('.shadedBG').appendChild(td);
+document.querySelector('.opcoestd').appendChild(createEle('tr'))
+document.querySelector('.opcoestd').children[0].appendChild(createEle('td'))
+document.querySelector('.opcoestd').children[0].children[0].appendChild(createEle('label','PARADO','StatusLab'))
+document.querySelector('.opcoestd').appendChild(createEle('tr'))
+document.querySelector('.opcoestd').children[1].appendChild(createEle('td'))
+document.querySelector('.opcoestd').children[1].children[0].appendChild(createEle('button','Iniciar','iniciarBtn'))
+document.querySelector('.opcoestd').children[1].children[0].appendChild(createEle('button','Pausar','pausarBtn'))
+document.querySelector('.opcoestd').children[1].children[0].appendChild(createEle('button','Zerar','zerarBtn'))
+
+//*************************** Stilizando ***************************//
+
+document.querySelector('.StatusLab').style.cssText = 'margin: 50px;' + 'font-weight: bold;'
+document.querySelector('.pausarBtn').style.cssText = 'margin: 2px;'
+document.querySelector('.iniciarBtn').style.cssText = 'margin: 2px;'
+document.querySelector('.zerarBtn').style.cssText = 'margin: 2px;'
+document.querySelector('.opcoestd').children[0].children[0].colSpan = '2';
+document.querySelector('.opcoestd').children[0].children[0].style.cssText = 'padding-top: 18px;' + 'padding-bottom: 10px;'
+document.querySelector('.opcoestd').style.cssText = 'padding-bottom: 500px;'
+document.querySelector('.opcoestd').children[0].style.cssText = 'background-color: white;'
+document.querySelector('.opcoestd').children[1].style.cssText = 'background-color: white;'
+
+function createEle(ele,texto = '',clas){
+    let EleCriado = document.createElement(ele);
+    EleCriado.innerText = texto;
+    if(clas !== undefined) EleCriado.classList = clas;
+    return EleCriado;
+}
+
+document.querySelector('.iniciarBtn').addEventListener('click',function(){
+    let stringJSON = JSON.stringify(1);
+    localStorage.setItem('AutoColeta', stringJSON);
+    if(teste){
+        verifica();
+    }
+})
+document.querySelector('.pausarBtn').addEventListener('click',function(){
+    let stringJSON = JSON.stringify(0);
+    localStorage.setItem('AutoColeta', stringJSON);
+    verifica();
+    teste = true;
+})
+document.querySelector('.zerarBtn').addEventListener('click',function(){
+    RecursosColetados = JSON.stringify(0);
+    localStorage.setItem('TotalRecursoColetado', RecursosColetados);
+    ss = 0;
+    timerRodando = JSON.stringify(ss);
+    localStorage.setItem('TimerRodando', timerRodando);
+    document.querySelector('.StatusLab').innerText = 'ZERADO';
+    document.querySelector('.StatusLab').style.cssText += 'color: red;'
+    resetar();
+    format2 = (new Intl.NumberFormat('dec', { style: 'decimal' }).format(total));
+    $('#content_value').find('h2').html('[Auto Coleta] Criado por Foxkrak</br></br>Tempo:' + ' ' + timer1(ss) + '⁣⁣      ' + 'Total de Recurso Coletado: ' + format2 + '</br></br>' + 'Madeira: ' + format3 + '&nbsp;&nbsp;&nbsp;Argila: ' + format3+ '&nbsp;&nbsp;&nbsp;Ferro: ' + format3)
+})
+
+function verifica(){
+    if(localStorage.getItem('AutoColeta') === '1'){
+        inicarTimer();
+        document.querySelector('.StatusLab').innerText = 'RODANDO';
+        document.querySelector('.StatusLab').style.cssText += 'color: green;'
+        //total = JSON.parse(localStorage.getItem('TotalRecursoColetado'))
+        teste = false;
+        StartS();
+    }else if(localStorage.getItem('AutoColeta') === '0'){
+        document.querySelector('.StatusLab').innerText = 'PAUSADO';
+        document.querySelector('.StatusLab').style.cssText += 'color: red;'
+        clearInterval(hora);
+        clearInterval(intervalo);
+    }
+}
+ function task(k, l) {
+   setTimeout(function() {
+       twcheese1();
+       document.querySelectorAll('.free_send_button')[l].click();
+       total += parseInt(document.querySelectorAll('.wood-value')[l].innerText) + parseInt(document.querySelectorAll('.stone-value')[l].innerText) + parseInt(document.querySelectorAll('.iron-value')[l].innerText);
+       RecursosColetados = JSON.stringify(total);
+       localStorage.setItem('TotalRecursoColetado', RecursosColetados);
+       console.log('Clicando em '+ l)
+   }, 1000 * k);
+ }
+verifica();
+function StartS(){
+    intervalo = setInterval(function(){
+        totalDiv3 = Math.round(total / 3);
+        format3 = (new Intl.NumberFormat('dec', { style: 'decimal' }).format(totalDiv3));
+        format2 = (new Intl.NumberFormat('dec', { style: 'decimal' }).format(total));
+        $('#content_value').find('h2').html('[Auto Coleta] Criado por Foxkrak</br></br>Tempo:' + ' ' + timer1(ss) + '⁣⁣      ' + 'Total de Recurso Coletado: ' + format2 + '</br></br>' + 'Madeira: ' + format3 + '&nbsp;&nbsp;&nbsp;Argila: ' + format3+ '&nbsp;&nbsp;&nbsp;Ferro: ' + format3)
+        var recaptcha = document.getElementsByClassName('recaptcha-checkbox-checkmark');
+        if (recaptcha.length != 0){
+            document.documentElement.getElementsByClassName('recaptcha-checkbox-checkmark')[0].click();
         }
-    }
-    var recaptcha = document.getElementsByClassName('recaptcha-checkbox-checkmark');
-    if (recaptcha.length != 0){
-        document.documentElement.getElementsByClassName('recaptcha-checkbox-checkmark')[0].click();
-        await timer(1000);
-    }
-    await timer(1000);
-    var listabtn = document.getElementsByClassName('free_send_button');
-    var relogio = document.getElementsByClassName('return-countdown');
-    if (relogio.length == 0) {
-        javascript: (window.TwCheese && TwCheese.tryUseTool('ASS')) || $.ajax('https://cheesasaurus.github.io/twcheese/launch/ASS.js?' +~~((new Date())/3e5),{cache:1,dataType:"script"});void 0;
-        await timer(1000);
-        for(var k = 3; k > -1; k--) {
-            await timer(500);
-            m = m + parseInt(document.getElementsByClassName('wood-value')[k].innerText,10);
-            s = s + parseInt(document.getElementsByClassName('stone-value')[k].innerText,10);
-            ir = ir + parseInt(document.getElementsByClassName('iron-value')[k].innerText,10);
-            total = m + s + ir
-            $(listabtn[k]).trigger('click')
+        var listabtn = document.querySelectorAll('.free_send_button');
+        var relogio = document.getElementsByClassName('return-countdown');
+        let i = document.querySelectorAll('.free_send_button').length;
+        let l = i-1
+        if(document.querySelector('#loading_content').style.display === 'none' && document.querySelectorAll('.return-countdown').length <= 4){
+            for(let itens of document.querySelectorAll('.units-entry-all')){
+                if(parseInt(itens.innerText.replace(/[^0-9]/g,'')) >= 10){
+                    twcheese1();
+                }
+            }
+            if(document.querySelectorAll('.free_send_button').length > 0 && document.querySelectorAll('.wood-value')[l].innerText !== '0'){
+                for(let k = 1; k <= i; k++) {
+                    task(k, l);
+                    l--
+                }
+            }
         }
-    }
+
+    },1000)
 }
