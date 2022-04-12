@@ -988,22 +988,26 @@ function verifica(){
     }
 }
 
-if(botao === undefined || botao === null || botao === 'Sim'){
+if(botao === undefined || botao === null){
     Construção_Edificios_Ordem = true;
     let stringJSON = JSON.stringify('Sim');
     localStorage.setItem('Ordem', stringJSON);
+    document.querySelector('.ordemBtn').innerText = 'Sim'
     document.querySelector('.ordemBtn').title = 'Construir em Ordem'
 }else if(botao === 'Não'){
     Construção_Edificios_Ordem = false;
+    document.querySelector('.ordemBtn').innerText = 'Não'
     document.querySelector('.ordemBtn').title = 'Construir Qualquer Edificio Disponivel'
 }
-if(botao2 === undefined || botao2 === null || botao2 === 'Não'){
+if(botao2 === undefined || botao2 === null){
     Construção_Edificios_Quest = false;
     let stringJSON = JSON.stringify('Não');
     localStorage.setItem('Quests', stringJSON);
+    document.querySelector('.ordemBtn').innerText = 'Não'
     document.querySelector('.questBtn').title = 'Priorizar Quest: Desligado'
 }else if(botao === 'Sim'){
     Construção_Edificios_Quest = true;
+    document.querySelector('.ordemBtn').innerText = 'Sim'
     document.querySelector('.questBtn').title = 'Priorizar Quest: Ligado'
 }
 verifica();
