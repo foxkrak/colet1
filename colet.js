@@ -116,14 +116,14 @@ if(status === 1){
     document.querySelector('.confBtn').title = 'Coletar o Maximo possivel na melhor coleta';
     confbtn = false;
 }
-if(status === null || status === undefined){
+
+function verificaconfbtn(){
+    let status = JSON.parse(localStorage.getItem('Status'))
+    if(status === null || status === undefined){
         let stringJSON = JSON.stringify(1);
         localStorage.setItem('Status', stringJSON)
         confbtn = true;
-        document.querySelector('.confBtn').innerText = 'Ligado';
-}
-function verificaconfbtn(){
-    if(status === 0){
+    }else if(status === 0){
         document.querySelector('.confBtn').innerText = 'Ligado';
         let stringJSON = JSON.stringify({"props":{"ASS":{"troopsAssigner":{"mode":"addict","allowedOptionIds":[1,2,3,4],"targetDurationSeconds":7200,"troops":{"spear":{"maySend":true,"reserved":0},"sword":{"maySend":true,"reserved":0},"axe":{"maySend":true,"reserved":0},"archer":{"maySend":true,"reserved":0},"light":{"maySend":true,"reserved":0},"marcher":{"maySend":true,"reserved":0},"heavy":{"maySend":true,"reserved":0},"knight":{"maySend":true,"reserved":0}},"troopOrder":[["axe","light","marcher"],["spear","sword","archer"],["heavy"],["knight"]]}}}});
         localStorage.setItem('twcheese.userConfig', stringJSON)
@@ -189,7 +189,7 @@ async function StartS(){
         let i = document.querySelectorAll('.free_send_button').length;
         let l = i-1
         if(confbtn){
-            if(document.querySelector('#loading_content').style.display === 'none' && document.querySelectorAll('.return-countdown').length === 0){
+            if(document.querySelectorAll('.return-countdown').length === 0){
                 for(let itens of document.querySelectorAll('.units-entry-all')){
                     if(parseInt(itens.innerText.replace(/[^0-9]/g,'')) >= 10){
                         twcheese1();
@@ -209,7 +209,7 @@ async function StartS(){
                 }
             }
         }else{
-            if(document.querySelector('#loading_content').style.display === 'none' && document.querySelectorAll('.return-countdown').length !== 0 && document.querySelectorAll('.return-countdown').length <= 4){
+            if(document.querySelectorAll('.return-countdown').length <= 4){
                 for(let itens of document.querySelectorAll('.units-entry-all')){
                     if(parseInt(itens.innerText.replace(/[^0-9]/g,'')) >= 10){
                         twcheese1();
