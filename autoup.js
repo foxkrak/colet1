@@ -20,6 +20,7 @@ let clic = 0;
 const td = document.createElement('td');
 const tr1 = document.createElement('tr');
 const tr2 = document.createElement('tr');
+let breka;
 
 // Escolha se você deseja que o bot enfileire os edifícios na ordem definida (= true) ou
 // assim que um prédio estiver disponível para a fila de construção (= false)
@@ -179,39 +180,57 @@ function delayS(delayInms) {
     }, delayInms);
   });
 }
+
+async function loading() {
+    return new Promise(resolve => {
+        let interval = setInterval(function(){
+            if(document.querySelector('#loading_content').style.display === 'inline'){
+                console.log('Loading..')
+            }else{
+            clearInterval(interval)
+                resolve(2)
+            }
+        },100)
+    });
+}
 //################################################
 
 async function verifQuest(){
+    breka = false;
     if(document.querySelector('.quest-popup-container') !== null){
         for(let uls of document.querySelector('.questline-list').querySelectorAll('.quest-link')){
                 uls.click();
-                await delayS(1000)
+                await loading();
                     if(document.querySelector('.quest-complete-btn') !== null){
                         document.querySelector('.quest-complete-btn').click();
+                        await loading();
                         Questlines.showDialog(0, 'main-tab')
                         await delayS(1000)
-                        teste();
+                        breka = true;
                         break;
 
                     }
                     if(document.querySelector('[class="skip-btn btn"]') !== null){
                         if(document.querySelector('[class="skip-btn btn"]').offsetWidth > 0 || document.querySelector('[class="skip-btn btn"]').offsetHeight > 0){
                             document.querySelector('[class="skip-btn btn"]').click();
+                            await loading();
                             Questlines.showDialog(0, 'main-tab')
                             await delayS(1000)
-                            teste();
+                            breka = true;
                             break;
 
                         }
                     }
             console.log('for')
         }
-        if(document.querySelectorAll('.reward-system-claim-button').length !== 0){
+        if(document.querySelectorAll('.reward-system-claim-button').length !== 0 && breka === false){
               teste();
-        }else{
+        }else if(breka === false){
               document.querySelector('.popup_box_close').click();
               variavel = true;
         }
+        console.log('')
+        if(breka) verifQuest();
     }
 }
 
