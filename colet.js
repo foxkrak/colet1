@@ -116,14 +116,13 @@ if(status === 1){
     document.querySelector('.confBtn').title = 'Coletar o Maximo possivel na melhor coleta';
     confbtn = false;
 }
-
-function verificaconfbtn(){
-    let status = JSON.parse(localStorage.getItem('Status'))
-    if(status === null || status === undefined){
+if(status === null || status === undefined){
         let stringJSON = JSON.stringify(1);
         localStorage.setItem('Status', stringJSON)
         confbtn = true;
-    }else if(status === 0){
+}
+function verificaconfbtn(){
+    if(status === 0){
         document.querySelector('.confBtn').innerText = 'Ligado';
         let stringJSON = JSON.stringify({"props":{"ASS":{"troopsAssigner":{"mode":"addict","allowedOptionIds":[1,2,3,4],"targetDurationSeconds":7200,"troops":{"spear":{"maySend":true,"reserved":0},"sword":{"maySend":true,"reserved":0},"axe":{"maySend":true,"reserved":0},"archer":{"maySend":true,"reserved":0},"light":{"maySend":true,"reserved":0},"marcher":{"maySend":true,"reserved":0},"heavy":{"maySend":true,"reserved":0},"knight":{"maySend":true,"reserved":0}},"troopOrder":[["axe","light","marcher"],["spear","sword","archer"],["heavy"],["knight"]]}}}});
         localStorage.setItem('twcheese.userConfig', stringJSON)
