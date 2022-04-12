@@ -146,7 +146,7 @@ function Secundario(){
         if(document.querySelector('.quest-popup-container') !== null){
             if(variavel){
                 console.log('entrou')
-                teste();
+                verifQuest();
                 variavel = false;
                 console.log(variavel)
             }
@@ -154,16 +154,13 @@ function Secundario(){
     },500);
 }
 async function teste(){
-    await verifQuest();
     if(document.querySelector('.quest-popup-container') !== null){
             document.querySelectorAll('.tab-link')[document.querySelectorAll('.tab-link').length -1].click();
-            if(document.querySelectorAll('.reward-system-claim-button').length !== 0){
-                while(document.querySelectorAll('.reward-system-claim-button').length !== 0){
-                    for(let btn of document.querySelectorAll('.reward-system-claim-button')){
-                        await delayS(300)
-                        btn.click();
-                        console.log('Pegando Recompenças de ',btn)
-                    }
+            while(document.querySelectorAll('.reward-system-claim-button').length !== 0){
+                for(let btn of document.querySelectorAll('.reward-system-claim-button')){
+                    await delayS(300)
+                    btn.click();
+                    console.log('Pegando Recompenças de ',btn)
                 }
             }
             if(document.querySelectorAll('.reward-system-claim-button').length === 0){
@@ -209,9 +206,13 @@ async function verifQuest(){
                     }
             console.log('for')
         }
-        console.log('saiu for')
+        if(document.querySelectorAll('.reward-system-claim-button').length !== 0){
+              teste();
+        }else{
+              document.querySelector('.popup_box_close').click();
+              variavel = true;
+        }
     }
-    return;
 }
 
     let delay = Math.floor(Math.random() * (Max_Tempo_Espera - Max_Tempo_Espera) + Min_Tempo_Espera);
