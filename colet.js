@@ -43,7 +43,6 @@ function inicarTimer(){
 
 //*************************** CRIANDO OS ELEMENTOS CONFIGURANDO E DANDO FUNÇÃO ***************************//
 
-td.classList = 'opcoestd';
 document.querySelector('.shadedBG').appendChild(createEle('td',undefined,'opcoestd'))
 document.querySelector('.opcoestd').appendChild(createEle('tr'))
 document.querySelector('.opcoestd').children[0].appendChild(createEle('td'))
