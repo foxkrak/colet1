@@ -1,12 +1,9 @@
 /*##############################################
-
 Logica inicial de Programação obtida, atraves de um tutorial
       Denominado "Os 5 primeiros dias - Modo Novato"
               Imagens Também do Mesmo
                  Autoria : senson
-
 https://forum.tribalwars.com.br/index.php?threads/os-5-primeiros-dias-modo-novato.334845/#post-3677800
-
 ##############################################*/
 
 
@@ -161,10 +158,12 @@ async function teste(){
     if(document.querySelector('.quest-popup-container') !== null){
             document.querySelectorAll('.tab-link')[document.querySelectorAll('.tab-link').length -1].click();
             if(document.querySelectorAll('.reward-system-claim-button').length !== 0){
-                for(let btn of document.querySelectorAll('.reward-system-claim-button')){
-                    await delayS(500)
-                    btn.click();
-                    console.log('Pegando Recompenças')
+                while(document.querySelectorAll('.reward-system-claim-button').length !== 0){
+                    for(let btn of document.querySelectorAll('.reward-system-claim-button')){
+                        await delayS(300)
+                        btn.click();
+                        console.log('Pegando Recompenças de ',btn)
+                    }
                 }
             }
             if(document.querySelectorAll('.reward-system-claim-button').length === 0){
