@@ -161,7 +161,7 @@ async function teste(){
     if(document.querySelector('.quest-popup-container') !== null){
         let val = document.querySelector('.questline-list').querySelectorAll('.quest-link').length
         setTimeout(function(){
-            document.querySelectorAll('.tab-link')[1].click();
+            document.querySelectorAll('.tab-link')[document.querySelectorAll('.tab-link').length -1].click();
             if(document.querySelectorAll('.reward-system-claim-button').length !== 0){
                 for(let btn of document.querySelectorAll('.reward-system-claim-button')){
                     btn.click();
