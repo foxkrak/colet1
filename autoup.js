@@ -196,7 +196,7 @@ async function verifQuest(){
                         break;
 
                     }
-                    if(document.querySelectorAll('.skip-btn').offsetWidth > 0 || document.querySelectorAll('.skip-btn').offsetHeight > 0){
+                    if(document.querySelector('[class="skip-btn btn"]').offsetWidth > 0 || document.querySelector('[class="skip-btn btn"]').offsetHeight > 0){
                         document.querySelector('.skip-btn').click();
                         Questlines.showDialog(0, 'main-tab')
                         teste();
