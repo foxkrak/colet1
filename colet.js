@@ -120,6 +120,7 @@ if(status === null || status === undefined){
         let stringJSON = JSON.stringify(1);
         localStorage.setItem('Status', stringJSON)
         confbtn = true;
+        document.querySelector('.confBtn').innerText = 'Ligado';
 }
 function verificaconfbtn(){
     if(status === 0){
