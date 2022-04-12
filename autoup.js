@@ -167,7 +167,8 @@ async function teste(){
                     btn.click();
                     console.log('Pegando Recompenças')
                 }
-            }else{
+            }
+            if(document.querySelectorAll('.reward-system-claim-button').length === 0){
                 document.querySelector('.popup_box_close').click();
                 variavel = true;
             }
@@ -184,6 +185,7 @@ async function verifQuest(){
                     if(document.querySelector('.quest-complete-btn') !== null){
                         document.querySelector('.quest-complete-btn').click();
                         Questlines.showDialog(0, 'main-tab')
+                        teste();
                         return;
                     }
                 },500)
