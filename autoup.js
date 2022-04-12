@@ -1003,11 +1003,11 @@ if(botao2 === undefined || botao2 === null){
     Construção_Edificios_Quest = false;
     let stringJSON = JSON.stringify('Não');
     localStorage.setItem('Quests', stringJSON);
-    document.querySelector('.ordemBtn').innerText = 'Não'
+    document.querySelector('.questBtn').innerText = 'Não'
     document.querySelector('.questBtn').title = 'Priorizar Quest: Desligado'
 }else if(botao === 'Sim'){
     Construção_Edificios_Quest = true;
-    document.querySelector('.ordemBtn').innerText = 'Sim'
+    document.querySelector('.questBtn').innerText = 'Sim'
     document.querySelector('.questBtn').title = 'Priorizar Quest: Ligado'
 }
 verifica();
