@@ -8,6 +8,7 @@ let hora;
 let intervalo;
 let RecursosColetados;
 let timerRodando;
+let status;
 let format2;
 let cont = 0;
 var total = 0;
@@ -111,7 +112,7 @@ document.querySelector('.zerarBtn').addEventListener('click',function(){
 document.querySelector('.confBtn').addEventListener('click',function(){
     verificaconfbtn();
 })
-let status = JSON.parse(localStorage.getItem('Status'))
+status = JSON.parse(localStorage.getItem('Status'))
 if(status === null || status === undefined){
         let stringJSON = JSON.stringify(1);
         localStorage.setItem('Status', stringJSON)
