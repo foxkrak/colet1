@@ -1,22 +1,13 @@
 let teste = true;
-let principal;
-let secundario;
-const td = document.createElement('td');
-const tr1 = document.createElement('tr');
-const tr2 = document.createElement('tr');
 let hora;
-let intervalo;
+let intervalo = true;
 let RecursosColetados;
 let timerRodando;
-let status;
 let format2;
-let cont = 0;
 var total = 0;
-var madeira = 0;
-var stone = 0;
-var iron = 0;
 let ss = 0;
 let confbtn = false;
+
 ss = JSON.parse(localStorage.getItem('TimerRodando'))
 total = JSON.parse(localStorage.getItem('TotalRecursoColetado'));
 format2 = (new Intl.NumberFormat('dec', { style: 'decimal' }).format(total));
@@ -53,7 +44,7 @@ function inicarTimer(){
 //*************************** CRIANDO OS ELEMENTOS CONFIGURANDO E DANDO FUNÇÃO ***************************//
 
 td.classList = 'opcoestd';
-document.querySelector('.shadedBG').appendChild(td);
+document.querySelector('.shadedBG').appendChild(createEle('td',undefined,'opcoestd'))
 document.querySelector('.opcoestd').appendChild(createEle('tr'))
 document.querySelector('.opcoestd').children[0].appendChild(createEle('td'))
 document.querySelector('.opcoestd').children[0].children[0].appendChild(createEle('label','PARADO','StatusLab'))
@@ -112,13 +103,8 @@ document.querySelector('.zerarBtn').addEventListener('click',function(){
 document.querySelector('.confBtn').addEventListener('click',function(){
     verificaconfbtn();
 })
-status = JSON.parse(localStorage.getItem('Status'))
-if(status === null || status === undefined){
-        let stringJSON = JSON.stringify(1);
-        localStorage.setItem('Status', stringJSON)
-        document.querySelector('.confBtn').innerText = 'Ligado';
-        confbtn = true;
-}else if(status === 1){
+let status = JSON.parse(localStorage.getItem('Status'))
+if(status === 1){
     document.querySelector('.confBtn').innerText = 'Ligado';
     let stringJSON = JSON.stringify({"props":{"ASS":{"troopsAssigner":{"mode":"addict","allowedOptionIds":[1,2,3,4],"targetDurationSeconds":7200,"troops":{"spear":{"maySend":true,"reserved":0},"sword":{"maySend":true,"reserved":0},"axe":{"maySend":true,"reserved":0},"archer":{"maySend":true,"reserved":0},"light":{"maySend":true,"reserved":0},"marcher":{"maySend":true,"reserved":0},"heavy":{"maySend":true,"reserved":0},"knight":{"maySend":true,"reserved":0}},"troopOrder":[["axe","light","marcher"],["spear","sword","archer"],["heavy"],["knight"]]}}}});
     localStorage.setItem('twcheese.userConfig', stringJSON)
@@ -134,7 +120,11 @@ if(status === null || status === undefined){
 
 function verificaconfbtn(){
     let status = JSON.parse(localStorage.getItem('Status'))
-    if(status === 0){
+    if(status === null || status === undefined){
+        let stringJSON = JSON.stringify(1);
+        localStorage.setItem('Status', stringJSON)
+        confbtn = true;
+    }else if(status === 0){
         document.querySelector('.confBtn').innerText = 'Ligado';
         let stringJSON = JSON.stringify({"props":{"ASS":{"troopsAssigner":{"mode":"addict","allowedOptionIds":[1,2,3,4],"targetDurationSeconds":7200,"troops":{"spear":{"maySend":true,"reserved":0},"sword":{"maySend":true,"reserved":0},"axe":{"maySend":true,"reserved":0},"archer":{"maySend":true,"reserved":0},"light":{"maySend":true,"reserved":0},"marcher":{"maySend":true,"reserved":0},"heavy":{"maySend":true,"reserved":0},"knight":{"maySend":true,"reserved":0}},"troopOrder":[["axe","light","marcher"],["spear","sword","archer"],["heavy"],["knight"]]}}}});
         localStorage.setItem('twcheese.userConfig', stringJSON)
@@ -160,27 +150,35 @@ function verifica(){
         document.querySelector('.StatusLab').style.cssText += 'color: green;'
         //total = JSON.parse(localStorage.getItem('TotalRecursoColetado'))
         teste = false;
+        intervalo = true;
         StartS();
     }else if(localStorage.getItem('AutoColeta') === '0'){
         document.querySelector('.StatusLab').innerText = 'PAUSADO';
         document.querySelector('.StatusLab').style.cssText += 'color: red;'
         clearInterval(hora);
-        clearInterval(intervalo);
+        intervalo = false;
     }
 }
- function task(k, l) {
-   setTimeout(function() {
-       twcheese1();
-       document.querySelectorAll('.free_send_button')[l].click();
-       total += parseInt(document.querySelectorAll('.wood-value')[l].innerText) + parseInt(document.querySelectorAll('.stone-value')[l].innerText) + parseInt(document.querySelectorAll('.iron-value')[l].innerText);
-       RecursosColetados = JSON.stringify(total);
-       localStorage.setItem('TotalRecursoColetado', RecursosColetados);
-       console.log('Clicando em '+ l)
-   }, 1000 * k);
- }
+async function loading() {
+    while(document.querySelector('#loading_content').style.display === 'inline'){
+        console.log('Loading..')
+        await delayS(100);
+    }
+    console.log('TESTE')
+    return;
+}
 verifica();
-function StartS(){
-    intervalo = setInterval(function(){
+
+function delayS(delayInms) {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve(2);
+        }, delayInms);
+    });
+}
+
+async function StartS(){
+    while(intervalo){
         totalDiv3 = Math.round(total / 3);
         format3 = (new Intl.NumberFormat('dec', { style: 'decimal' }).format(totalDiv3));
         format2 = (new Intl.NumberFormat('dec', { style: 'decimal' }).format(total));
@@ -189,7 +187,6 @@ function StartS(){
         if (recaptcha.length != 0){
             document.documentElement.getElementsByClassName('recaptcha-checkbox-checkmark')[0].click();
         }
-        var listabtn = document.querySelectorAll('.free_send_button');
         let i = document.querySelectorAll('.free_send_button').length;
         let l = i-1
         if(confbtn){
@@ -199,10 +196,16 @@ function StartS(){
                         twcheese1();
                     }
                 }
-                if(document.querySelectorAll('.free_send_button').length > 0 && document.querySelectorAll('.wood-value')[l].innerText !== '0'){
-                    for(let k = 1; k <= i; k++) {
-                        task(k, l);
-                        l--
+                for(let k = document.querySelectorAll('.free_send_button').length-1; k >= 0; k--) {
+                    if(document.querySelectorAll('.free_send_button').length > 0 && document.querySelectorAll('.wood-value')[k].innerText !== '0'){
+                        twcheese1();
+                        await delayS(500);
+                        document.querySelectorAll('.free_send_button')[k].click();
+                        await loading();
+                        total += parseInt(document.querySelectorAll('.wood-value')[k].innerText) + parseInt(document.querySelectorAll('.stone-value')[k].innerText) + parseInt(document.querySelectorAll('.iron-value')[k].innerText);
+                        RecursosColetados = JSON.stringify(total);
+                        localStorage.setItem('TotalRecursoColetado', RecursosColetados);
+                        console.log('Clicando em '+ k)
                     }
                 }
             }
@@ -213,14 +216,20 @@ function StartS(){
                         twcheese1();
                     }
                 }
-                if(document.querySelectorAll('.free_send_button').length > 0 && document.querySelectorAll('.wood-value')[l].innerText !== '0'){
-                    for(let k = 1; k <= i; k++) {
-                        task(k, l);
-                        l--
+                for(let k = document.querySelectorAll('.free_send_button').length-1; k >= 0; k--) {
+                    if(document.querySelectorAll('.free_send_button').length > 0 && document.querySelectorAll('.wood-value')[k].innerText !== '0'){
+                        twcheese1();
+                        await delayS(500);
+                        document.querySelectorAll('.free_send_button')[k].click();
+                        await loading();
+                        total += parseInt(document.querySelectorAll('.wood-value')[k].innerText) + parseInt(document.querySelectorAll('.stone-value')[k].innerText) + parseInt(document.querySelectorAll('.iron-value')[k].innerText);
+                        RecursosColetados = JSON.stringify(total);
+                        localStorage.setItem('TotalRecursoColetado', RecursosColetados);
+                        console.log('Clicando em '+ k)
                     }
                 }
             }
         }
-
-    },1000)
+        await delayS(1000);
+    }
 }
