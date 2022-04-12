@@ -192,6 +192,7 @@ async function verifQuest(){
                     if(document.querySelector('.quest-complete-btn') !== null){
                         document.querySelector('.quest-complete-btn').click();
                         Questlines.showDialog(0, 'main-tab')
+                        await delayS(1000)
                         teste();
                         break;
 
@@ -200,6 +201,7 @@ async function verifQuest(){
                         if(document.querySelector('[class="skip-btn btn"]').offsetWidth > 0 || document.querySelector('[class="skip-btn btn"]').offsetHeight > 0){
                             document.querySelector('[class="skip-btn btn"]').click();
                             Questlines.showDialog(0, 'main-tab')
+                            await delayS(1000)
                             teste();
                             break;
 
