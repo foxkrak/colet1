@@ -159,8 +159,6 @@ function Secundario(){
 async function teste(){
     await verifQuest();
     if(document.querySelector('.quest-popup-container') !== null){
-        let val = document.querySelector('.questline-list').querySelectorAll('.quest-link').length
-        setTimeout(function(){
             document.querySelectorAll('.tab-link')[document.querySelectorAll('.tab-link').length -1].click();
             if(document.querySelectorAll('.reward-system-claim-button').length !== 0){
                 for(let btn of document.querySelectorAll('.reward-system-claim-button')){
@@ -172,31 +170,39 @@ async function teste(){
                 document.querySelector('.popup_box_close').click();
                 variavel = true;
             }
-        },1200 * val)
     }
 }
+
+//################################################
+//Delay
+function delayS(delayInms) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(2);
+    }, delayInms);
+  });
+}
+//################################################
+
 async function verifQuest(){
     if(document.querySelector('.quest-popup-container') !== null){
-        let val = document.querySelector('.questline-list').querySelectorAll('.quest-link').length
         for(let uls of document.querySelector('.questline-list').querySelectorAll('.quest-link')){
-            setTimeout(function() {
                 uls.click();
-                setTimeout(function() {
+                await delayS(1000)
                     if(document.querySelector('.quest-complete-btn') !== null){
                         document.querySelector('.quest-complete-btn').click();
                         Questlines.showDialog(0, 'main-tab')
                         teste();
-                        return;
+                        break;
+
                     }
-                    if(document.querySelector('.skip-btn') !== null){
+                    if(document.querySelectorAll('.skip-btn').offsetWidth > 0 || document.querySelectorAll('.skip-btn').offsetHeight > 0){
                         document.querySelector('.skip-btn').click();
                         Questlines.showDialog(0, 'main-tab')
                         teste();
-                        return;
+                        break;
+
                     }
-                },500)
-            },1000 * val)
-            val--
             console.log('for')
         }
         console.log('saiu for')
