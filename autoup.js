@@ -188,6 +188,12 @@ async function verifQuest(){
                         teste();
                         return;
                     }
+                    if(document.querySelector('.skip-btn') !== null){
+                        document.querySelector('.skip-btn').click();
+                        Questlines.showDialog(0, 'main-tab')
+                        teste();
+                        return;
+                    }
                 },500)
             },1000 * val)
             val--
