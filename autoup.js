@@ -162,6 +162,7 @@ async function teste(){
             document.querySelectorAll('.tab-link')[document.querySelectorAll('.tab-link').length -1].click();
             if(document.querySelectorAll('.reward-system-claim-button').length !== 0){
                 for(let btn of document.querySelectorAll('.reward-system-claim-button')){
+                    await delayS(500)
                     btn.click();
                     console.log('Pegando Recompenças')
                 }
