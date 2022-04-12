@@ -172,7 +172,7 @@ async function teste(){
                 document.querySelector('.popup_box_close').click();
                 variavel = true;
             }
-        },1150 * val)
+        },1200 * val)
     }
 }
 async function verifQuest(){
