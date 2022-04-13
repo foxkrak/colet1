@@ -147,27 +147,28 @@ function Secundario(){
         if(document.querySelector('.quest-popup-container') !== null){
             if(variavel){
                 console.log('entrou')
-                verifQuest();
                 variavel = false;
                 console.log(variavel)
+                verifQuest();
             }
         }
     },500);
 }
 async function teste(){
     if(document.querySelector('.quest-popup-container') !== null){
-            document.querySelectorAll('.tab-link')[document.querySelectorAll('.tab-link').length -1].click();
-            while(document.querySelectorAll('.reward-system-claim-button').length !== 0){
-                for(let btn of document.querySelectorAll('.reward-system-claim-button')){
-                    await delayS(300)
-                    btn.click();
-                    console.log('Pegando Recompenças de ',btn)
-                }
+        document.querySelectorAll('.tab-link')[document.querySelectorAll('.tab-link').length -1].click();
+        await loading();
+        while(document.querySelectorAll('.reward-system-claim-button').length !== 0){
+            for(let btn of document.querySelectorAll('.reward-system-claim-button')){
+                console.log('Pegando Recompenças Em ',btn)
+                btn.click();
+                await loading();
             }
-            if(document.querySelectorAll('.reward-system-claim-button').length === 0){
-                document.querySelector('.popup_box_close').click();
-                variavel = true;
-            }
+        }
+        if(document.querySelectorAll('.reward-system-claim-button').length === 0){
+            document.querySelector('.popup_box_close').click();
+            variavel = true;
+        }
     }
 }
 
@@ -196,41 +197,55 @@ async function loading() {
 //################################################
 
 async function verifQuest(){
-    breka = false;
+    //await delayS(500);
+    //breka = false;
     if(document.querySelector('.quest-popup-container') !== null){
+        let t = document.querySelector('.questline-list').querySelectorAll('.quest-link').length
         for(let uls of document.querySelector('.questline-list').querySelectorAll('.quest-link')){
-                uls.click();
-                await loading();
+            console.log('Clicando em ',uls)
+            uls.click();
+            await loading();
+            console.log('Verificando Itens.')
                     if(document.querySelector('.quest-complete-btn') !== null){
+                        console.log('Recebendo Recompesa de Missao.')
                         document.querySelector('.quest-complete-btn').click();
                         await loading();
+                        //await delayS(1000)
+                        //breka = true;
                         Questlines.showDialog(0, 'main-tab')
-                        await delayS(1000)
-                        breka = true;
-                        break;
+                        await loading();
+                        verifQuest();
+                        return;
 
                     }
                     if(document.querySelector('[class="skip-btn btn"]') !== null){
                         if(document.querySelector('[class="skip-btn btn"]').offsetWidth > 0 || document.querySelector('[class="skip-btn btn"]').offsetHeight > 0){
+                            console.log('Pulando Missao Desnecessaria.')
                             document.querySelector('[class="skip-btn btn"]').click();
                             await loading();
                             Questlines.showDialog(0, 'main-tab')
-                            await delayS(1000)
-                            breka = true;
-                            break;
+                            await loading();
+                            //await delayS(1000)
+                            //breka = true;
+                            verifQuest();
+                            return;
+                            //break;
 
                         }
                     }
-            console.log('for')
+            t--
+            if(t>0){
+                console.log('Nada encontrado, Proxima Missao.')
+            }
         }
         if(document.querySelectorAll('.reward-system-claim-button').length !== 0 && breka === false){
-              teste();
-        }else if(breka === false){
+            teste();
+            return;
+        }else{
               document.querySelector('.popup_box_close').click();
               variavel = true;
         }
-        console.log('')
-        if(breka) verifQuest();
+        console.log('Nenhuma Recompensa Disponivel.');
     }
 }
 
