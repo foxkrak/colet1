@@ -239,7 +239,7 @@ async function verifQuest(){
                 console.log('Nada encontrado, Proxima Missao.')
             }
         }
-        if(document.querySelectorAll('.reward-system-claim-button').length !== 0 && breka === false){
+        if(document.querySelectorAll('.reward-system-claim-button').length !== 0){
             teste();
             return;
         }else{
