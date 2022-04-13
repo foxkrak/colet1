@@ -146,9 +146,9 @@ function Secundario(){
         }
         if(document.querySelector('.quest-popup-container') !== null){
             if(variavel){
-                console.log('entrou')
+                console.log('Popup de Missões Aberta.')
+                console.log('Startando Verificações.')
                 variavel = false;
-                console.log(variavel)
                 verifQuest();
             }
         }
