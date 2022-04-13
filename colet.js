@@ -1,3 +1,4 @@
+var antes = Date.now();
 let teste = true;
 let hora;
 let intervalo = true;
@@ -7,6 +8,7 @@ let format2;
 var total = 0;
 let ss = 0;
 let confbtn = false;
+let intervalo2;
 
 ss = JSON.parse(localStorage.getItem('TimerRodando'))
 total = JSON.parse(localStorage.getItem('TotalRecursoColetado'));
@@ -38,6 +40,8 @@ function inicarTimer(){
         ss++
         timerRodando = JSON.stringify(ss);
         localStorage.setItem('TimerRodando', timerRodando);
+        document.querySelector('.StatusLab').innerText = 'RODANDO';
+        document.querySelector('.StatusLab').style.cssText += 'color: green;'
     },1000)
 }
 
@@ -104,13 +108,13 @@ document.querySelector('.confBtn').addEventListener('click',function(){
 })
 let status = JSON.parse(localStorage.getItem('Status'))
 if(status === 1){
-    document.querySelector('.confBtn').innerText = 'Ligado';
+    document.querySelector('.confBtn').innerText = 'Igual';
     let stringJSON = JSON.stringify({"props":{"ASS":{"troopsAssigner":{"mode":"addict","allowedOptionIds":[1,2,3,4],"targetDurationSeconds":7200,"troops":{"spear":{"maySend":true,"reserved":0},"sword":{"maySend":true,"reserved":0},"axe":{"maySend":true,"reserved":0},"archer":{"maySend":true,"reserved":0},"light":{"maySend":true,"reserved":0},"marcher":{"maySend":true,"reserved":0},"heavy":{"maySend":true,"reserved":0},"knight":{"maySend":true,"reserved":0}},"troopOrder":[["axe","light","marcher"],["spear","sword","archer"],["heavy"],["knight"]]}}}});
     localStorage.setItem('twcheese.userConfig', stringJSON)
     document.querySelector('.confBtn').title = 'Mesmo Tempo de coleta em todos';
     confbtn = true;
 }else if(status === 0){
-    document.querySelector('.confBtn').innerText = 'Desligado';
+    document.querySelector('.confBtn').innerText = 'Maximo';
     let stringJSON = JSON.stringify({"props":{"ASS":{"troopsAssigner":{"mode":"sane_person","allowedOptionIds":[1,2,3,4],"targetDurationSeconds":7200,"troops":{"spear":{"maySend":true,"reserved":0},"sword":{"maySend":true,"reserved":0},"axe":{"maySend":true,"reserved":0},"archer":{"maySend":true,"reserved":0},"light":{"maySend":true,"reserved":0},"marcher":{"maySend":true,"reserved":0},"heavy":{"maySend":true,"reserved":0},"knight":{"maySend":true,"reserved":0}},"troopOrder":[["axe","light","marcher"],["spear","sword","archer"],["heavy"],["knight"]]}}}});
     localStorage.setItem('twcheese.userConfig', stringJSON)
     document.querySelector('.confBtn').title = 'Coletar o Maximo possivel na melhor coleta';
@@ -120,12 +124,12 @@ if(status === null || status === undefined){
     let stringJSON = JSON.stringify(1);
     localStorage.setItem('Status', stringJSON)
     confbtn = true;
-    document.querySelector('.confBtn').innerText = 'Ligado';
+    document.querySelector('.confBtn').innerText = 'Igual';
 }
 function verificaconfbtn(){
     status = JSON.parse(localStorage.getItem('Status'))
     if(status === 0){
-        document.querySelector('.confBtn').innerText = 'Ligado';
+        document.querySelector('.confBtn').innerText = 'Igual';
         let stringJSON = JSON.stringify({"props":{"ASS":{"troopsAssigner":{"mode":"addict","allowedOptionIds":[1,2,3,4],"targetDurationSeconds":7200,"troops":{"spear":{"maySend":true,"reserved":0},"sword":{"maySend":true,"reserved":0},"axe":{"maySend":true,"reserved":0},"archer":{"maySend":true,"reserved":0},"light":{"maySend":true,"reserved":0},"marcher":{"maySend":true,"reserved":0},"heavy":{"maySend":true,"reserved":0},"knight":{"maySend":true,"reserved":0}},"troopOrder":[["axe","light","marcher"],["spear","sword","archer"],["heavy"],["knight"]]}}}});
         localStorage.setItem('twcheese.userConfig', stringJSON)
         let strJSON = JSON.stringify(1);
@@ -133,8 +137,9 @@ function verificaconfbtn(){
         document.querySelector('.confBtn').title = 'Mesmo Tempo de coleta em todos';
         confbtn = true;
         console.log('Entrou no Status ',status)
+        location.reload();
     }else if(status === 1){
-        document.querySelector('.confBtn').innerText = 'Desligado';
+        document.querySelector('.confBtn').innerText = 'Maximo';
         let stringJSON = JSON.stringify({"props":{"ASS":{"troopsAssigner":{"mode":"sane_person","allowedOptionIds":[1,2,3,4],"targetDurationSeconds":7200,"troops":{"spear":{"maySend":true,"reserved":0},"sword":{"maySend":true,"reserved":0},"axe":{"maySend":true,"reserved":0},"archer":{"maySend":true,"reserved":0},"light":{"maySend":true,"reserved":0},"marcher":{"maySend":true,"reserved":0},"heavy":{"maySend":true,"reserved":0},"knight":{"maySend":true,"reserved":0}},"troopOrder":[["axe","light","marcher"],["spear","sword","archer"],["heavy"],["knight"]]}}}});
         localStorage.setItem('twcheese.userConfig', stringJSON)
         let strJSON = JSON.stringify(0);
@@ -142,10 +147,11 @@ function verificaconfbtn(){
         document.querySelector('.confBtn').title = 'Coletar o Maximo possivel na melhor coleta';
         confbtn = false;
         console.log('Entrou no Status ',status)
+        location.reload();
     }
 }
 
-function verifica(){
+async function verifica(){
     if(localStorage.getItem('AutoColeta') === '1'){
         inicarTimer();
         document.querySelector('.StatusLab').innerText = 'RODANDO';
@@ -153,11 +159,18 @@ function verifica(){
         //total = JSON.parse(localStorage.getItem('TotalRecursoColetado'))
         teste = false;
         intervalo = true;
-        StartS();
+        while(true){
+            await delayS(300);
+            if(document.readyState === 'complete'){
+                StartS();
+                break;
+            }
+        }
     }else if(localStorage.getItem('AutoColeta') === '0'){
         document.querySelector('.StatusLab').innerText = 'PAUSADO';
         document.querySelector('.StatusLab').style.cssText += 'color: red;'
         clearInterval(hora);
+        clearInterval(intervalo2);
         intervalo = false;
     }
 }
@@ -200,7 +213,7 @@ function trops(){
 }
 
 async function StartS(){
-    while(intervalo){
+    intervalo2 = setInterval(function(){
         totalDiv3 = Math.round(total / 3);
         format3 = (new Intl.NumberFormat('dec', { style: 'decimal' }).format(totalDiv3));
         format2 = (new Intl.NumberFormat('dec', { style: 'decimal' }).format(total));
@@ -209,18 +222,19 @@ async function StartS(){
         if (recaptcha.length != 0){
             document.documentElement.getElementsByClassName('recaptcha-checkbox-checkmark')[0].click();
         }
-        let i = document.querySelectorAll('.free_send_button').length;
-        let l = i-1
+    },500)
+    while(intervalo){
         if(confbtn){
             if(document.readyState === 'complete' && document.querySelectorAll('.return-countdown').length === 0){
                 if(trops()){
                     twcheese1();
                 }
                 for(let k = document.querySelectorAll('.free_send_button').length-1; k>=0;k--){
+                    await delayS(500);
                     if(inputTrop()){
                         if(document.querySelectorAll('.free_send_button').length > 0){
-                            document.querySelectorAll('.free_send_button')[k].click();
                             console.log('Clicando em '+ k)
+                            document.querySelectorAll('.free_send_button')[k].click();
                             await loading();
                             total += parseInt(document.querySelectorAll('.wood-value')[k].innerText) + parseInt(document.querySelectorAll('.stone-value')[k].innerText) + parseInt(document.querySelectorAll('.iron-value')[k].innerText);
                             RecursosColetados = JSON.stringify(total);
@@ -250,3 +264,6 @@ async function StartS(){
         await delayS(300);
     }
 }
+twcheese1();
+var duracao = Date.now() - antes;
+console.log('Terminou em ' + duracao + 'ms');
