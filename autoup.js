@@ -201,6 +201,7 @@ async function verifQuest(){
     //breka = false;
     if(document.querySelector('.quest-popup-container') !== null){
         let t = document.querySelector('.questline-list').querySelectorAll('.quest-link').length
+        console.log('Total de Missoes em Progresso! ',t)
         for(let uls of document.querySelector('.questline-list').querySelectorAll('.quest-link')){
             console.log('Clicando em ',uls)
             uls.click();
