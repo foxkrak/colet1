@@ -16,24 +16,42 @@ const Max_Tempo_Espera = 900000;
 let Etapa = "Etapa_1";
 let principal;
 let secundario;
-let clic = 0;
+let hora;
+let timerRodando;
+let ss = 0;
+let recomp;
 const td = document.createElement('td');
-const tr1 = document.createElement('tr');
-const tr2 = document.createElement('tr');
 let breka;
+let pontos;
+let pontosC;
+let countx;
 
 // Escolha se você deseja que o bot enfileire os edifícios na ordem definida (= true) ou
 // assim que um prédio estiver disponível para a fila de construção (= false)
-let Construção_Edificios_Ordem;
+let Construção_Edificios_Ordem = true;
 let Construção_Edificios_Quest;
 let botao;
 let botao2;
 let variavel = true;
 
+countx = JSON.parse(localStorage.getItem('Countx'));
+recomp = JSON.parse(localStorage.getItem('Recomp'));
 botao = JSON.parse(localStorage.getItem('Ordem'));
 botao2 = JSON.parse(localStorage.getItem('Quests'));
 
+if(countx === null || countx === undefined){
+    let stringJSON = JSON.stringify(0);
+    localStorage.setItem('Countx', stringJSON);
+    countx = JSON.parse(localStorage.getItem('Countx'));
+}else{
+    countx = JSON.parse(localStorage.getItem('Countx'));
+}
 
+if(recomp === null || recomp === undefined){
+    let stringJSON = JSON.stringify(0);
+    localStorage.setItem('Recomp', stringJSON);
+    recomp = JSON.parse(localStorage.getItem('Recomp'));
+}
 
 function verifica1(){
     botao = JSON.parse(localStorage.getItem('Ordem'));
@@ -98,22 +116,51 @@ function executarEtapa1(){
     let Evoluir_vilas = getEvoluir_vilas();
     //console.log(Evoluir_vilas);
     if (Evoluir_vilas == Edificio_Principal){
-        principal = setInterval(function(){
+        principal = setInterval(async function(){
             // construir qualquer edificio custeável, se possível
+            if(Construção_Edificios_Ordem && Construção_Edificios_Quest){
+                document.querySelector('.statusLab').innerHTML = 'Upando em ordem priorizando quests';
+            }else if(Construção_Edificios_Ordem){
+                document.querySelector('.statusLab').innerHTML = 'Upando em ordem pré definida.';
+            }else if(Construção_Edificios_Quest){
+                document.querySelector('.statusLab').innerHTML = 'Upando sem ordem, priorizando quest.';
+            }else{
+                document.querySelector('.statusLab').innerHTML = 'Upando qualquer edificio disponivel.';
+            }
             if(Construção_Edificios_Quest){
                 if(document.querySelectorAll('.current-quest').length !== 0){
                     for(let i of document.querySelectorAll('.current-quest')){
-                        if(i.offsetWidth > 0 || i.offsetHeight > 0){
+                        if(i.parentElement.querySelector('.inactive') !== null){
+                            if(i.parentElement.querySelector('.inactive').innerText === 'A fazenda é pequena demais.'){
+                                if($('#main_buildrow_farm').find('.btn-build')[0].offsetWidth > 0 && $('#main_buildrow_farm').find('.btn-build')[0].offsetHeight > 0){
+                                    document.querySelector('#main_buildrow_farm').querySelector('.btn-build').click();
+                                    await loading();
+                                }
+                            }
+                            /*if(i.parentElement.querySelector('.inactive').innerText === 'A fazenda é pequena demais.'){
+                                if($('#main_buildrow_farm').find('.btn-build')[0].offsetWidth > 0 && $('#main_buildrow_farm').find('.btn-build')[0].offsetHeight > 0){
+                                    $('#main_buildrow_farm').find('.btn-build').click();
+                                    await loading();
+                                }
+                            }*/
+                        }
+                        if(i.offsetWidth > 0 || i.offsetHeight > 0 && $('#buildqueue').find('b').length === 0){
+                            console.log('Upando Quests');
+                            document.querySelector('.statusLab').innerHTML = 'Upando quests.';
                             i.click();
-                            console.log('Upando Quests')
+                            await loading();
                         }
                     }
                 }
-                if(document.querySelectorAll('.current-quest').length === 0){
+                if(document.querySelectorAll('.current-quest').length === 0 && $('#buildqueue').find('b').length === 0){
+                    document.querySelector('.statusLab').innerHTML = 'Nenhuma quest, upando em ordem pré definida.';
                     Proxima_Construção();
                 }
-            }else{
+            }else if($('#buildqueue').find('b').length === 0){
                 Proxima_Construção();
+            }
+            if(document.querySelector('#popup_box_push_notification_prompt') !== null){
+                document.querySelector('.popup_box_close').click();
             }
         }, 1000);
     }
@@ -135,38 +182,52 @@ function Secundario(){
 
         if(timeSplit[0]*60*60+timeSplit[1]*60+timeSplit[2]*1<3*60){
             console.log("Completar Grátis");
+            countx++
+            let stringJSON = JSON.stringify(countx);
+            localStorage.setItem('Countx', stringJSON);
             tr.find('td').eq(2).find('a').eq(2).click();
 
         }
         //missao concluida
-        if($('[class="btn btn-confirm-yes status-btn quest-complete-btn"]').length > 0 || document.querySelector('.quest_new') !== null){
+        if(countx === 2){
             if(document.querySelector('.quest-popup-container') === null){
+                document.querySelector('.statusLab').innerHTML = 'Recompença disponivel.';
                 Questlines.showDialog(0, 'main-tab')
+                countx = 0;
+                let stringJSON = JSON.stringify(countx);
+                localStorage.setItem('Countx', stringJSON);
             }
         }
         if(document.querySelector('.quest-popup-container') !== null){
             if(variavel){
                 console.log('Popup de Missões Aberta.')
                 console.log('Startando Verificações.')
-                variavel = false;
                 verifQuest();
+                variavel = false;
             }
         }
-    },500);
+    },300);
 }
 async function teste(){
     if(document.querySelector('.quest-popup-container') !== null){
-        document.querySelectorAll('.tab-link')[document.querySelectorAll('.tab-link').length -1].click();
         await loading();
         while(document.querySelectorAll('.reward-system-claim-button').length !== 0){
             for(let btn of document.querySelectorAll('.reward-system-claim-button')){
                 console.log('Pegando Recompenças Em ',btn)
+                document.querySelector('.statusLab').innerHTML = 'Pegando recompença.';
+                recomp++
+                let stringJSON = JSON.stringify(recomp);
+                localStorage.setItem('Recomp', stringJSON);
+                document.querySelector('.recompD').innerHTML = `<h5>${recomp}</h5>`;
                 btn.click();
                 await loading();
+                await delayS(100)
             }
         }
         if(document.querySelectorAll('.reward-system-claim-button').length === 0){
-            document.querySelector('.popup_box_close').click();
+            if(document.querySelector('.popup_box_close') !== null){
+                document.querySelector('.popup_box_close').click();
+            }
             variavel = true;
         }
     }
@@ -194,10 +255,23 @@ async function loading() {
         },100)
     });
 }
+async function loading2() {
+    return new Promise(resolve => {
+        let interval = setInterval(function(){
+            if(document.querySelector('.quest-popup-container') === null){
+                console.log('Loading..')
+            }else{
+            clearInterval(interval)
+                resolve(2)
+            }
+        },100)
+    });
+}
 //################################################
 
 async function verifQuest(){
-    //await delayS(500);
+    await delayS(500);
+    await loading2();
     //breka = false;
     if(document.querySelector('.quest-popup-container') !== null){
         let t = document.querySelector('.questline-list').querySelectorAll('.quest-link').length
@@ -206,16 +280,20 @@ async function verifQuest(){
             console.log('Clicando em ',uls)
             uls.click();
             await loading();
+            await delayS(200);
             console.log('Verificando Itens.')
                     if(document.querySelector('.quest-complete-btn') !== null){
                         console.log('Recebendo Recompesa de Missao.')
-                        document.querySelector('.quest-complete-btn').click();
+                        document.querySelector('[class="btn btn-confirm-yes status-btn quest-complete-btn"]').click();
                         await loading();
-                        //await delayS(1000)
-                        //breka = true;
-                        Questlines.showDialog(0, 'main-tab')
-                        await loading();
-                        verifQuest();
+                        document.querySelector('.statusLab').innerHTML = 'Pegando recompença.';
+                        recomp++
+                        let stringJSON = JSON.stringify(recomp);
+                        localStorage.setItem('Recomp', stringJSON);
+                        document.querySelector('.recompD').innerHTML = `<h5>${recomp}</h5>`;
+                        //await delayS(500)
+                        //Questlines.showDialog(0, 'main-tab')
+                        variavel = true;
                         return;
 
                     }
@@ -224,13 +302,11 @@ async function verifQuest(){
                             console.log('Pulando Missao Desnecessaria.')
                             document.querySelector('[class="skip-btn btn"]').click();
                             await loading();
-                            Questlines.showDialog(0, 'main-tab')
-                            await loading();
-                            //await delayS(1000)
-                            //breka = true;
-                            verifQuest();
+                            document.querySelector('.statusLab').innerHTML = 'Pulando quest desnecessaria.';
+                            //await delayS(500)
+                            //Questlines.showDialog(0, 'main-tab')
+                            variavel = true;
                             return;
-                            //break;
 
                         }
                     }
@@ -242,11 +318,14 @@ async function verifQuest(){
         if(document.querySelectorAll('.reward-system-claim-button').length !== 0){
             teste();
             return;
-        }else{
-              document.querySelector('.popup_box_close').click();
-              variavel = true;
+        }else if(document.querySelectorAll('.reward-system-claim-button').length === 0 && document.querySelector('.quest-popup-container') !== null){
+            if(document.querySelector('.popup_box_close') !== null){
+                document.querySelector('.popup_box_close').click();
+            }
+            variavel = true;
         }
         console.log('Nenhuma Recompensa Disponivel.');
+        document.querySelector('.statusLab').innerHTML = 'Nenhuma recompença disponivel.';
     }
 }
 
@@ -976,32 +1055,81 @@ function getConstrução_Edifcios_Serie() {
 
 }
 
+document.querySelector('.shadedBG').appendChild(createEle('td',undefined,'opcoestd content-border border-frame-gold-red'))
+document.querySelector('.opcoestd').innerHTML = html();
+document.querySelector('.opcoestd').style.cssText = 'margin-top: 200px;'+'position: absolute;'
+
+recomp = JSON.parse(localStorage.getItem('Recomp'))
+if(recomp === null || recomp === undefined){recomp = 0;}
+ss = JSON.parse(localStorage.getItem('TimerRodando2'))
+
+function timer1(segundos){
+    const data = new Date(segundos * 1000);
+    return data.toLocaleTimeString('pt-BR', { hour12: false, timeZone: 'UTC' })
+}
+if(pontos !== null || pontos !== undefined){
+    pontos = JSON.parse(localStorage.getItem('PontosComeco'));
+    pontosC = parseInt(document.querySelector('#rank_points').innerHTML) - pontos
+    document.querySelector('.pontosD').innerHTML = `<h5>${pontosC}</h5>`;
+}
+if(pontos === null || pontos === undefined){
+    pontos = parseInt(document.querySelector('#rank_points').innerHTML);
+    let stringJSON2 = JSON.stringify(pontos);
+    localStorage.setItem('PontosComeco', stringJSON2);
+    pontosC = parseInt(document.querySelector('#rank_points').innerHTML) - pontos;
+    document.querySelector('.pontosD').innerHTML = `<h5>${pontosC}</h5>`;
+}
+function inicarTimer(){
+    hora = setInterval(function(){
+        ss++
+        timerRodando = JSON.stringify(ss);
+        localStorage.setItem('TimerRodando2', timerRodando);
+        document.querySelector('.StatusLab').innerHTML = '<h5>RODANDO</h5>';
+        document.querySelector('.tempoD').innerHTML = `<h5>${timer1(ss)}</h5>`;
+        document.querySelector('.StatusLab').style.cssText += 'color: green;'
+        if(pontos !== null || pontos !== undefined){
+            pontos = JSON.parse(localStorage.getItem('PontosComeco'));
+            pontosC = parseInt(document.querySelector('#rank_points').innerHTML) - pontos
+            document.querySelector('.pontosD').innerHTML = `<h5>${pontosC}</h5>`;
+        }
+    },1000)
+}
+
 //*************************** CRIANDO OS ELEMENTOS CONFIGURANDO E DANDO FUNÇÃO ***************************//
+function html(){
+    let html = `<td class="opcoestd content-border border-frame-gold-red" style="margin-top: 200px; position: absolute;">
+      <table class="vis">
+            <tbody><tr class="border-frame-gold-red">
+              <td style="text-align: center; padding-top: 10px; width: 290px" class="avisos" colspan="6"><h3>[Auto Up]</h3></td>
+            </tr>
+            <tr>
+              <td style="text-align: center; width: 5px;"><span class="icon header time"></span></td>
+              <td class="tempoD" style="text-align: center; width: 120px;"><h5>${timer1(ss)}</h5></td>
+              <td style="text-align: center; width: 25px;"><img src="/graphic/quests_new/new_quest_icon_small.png" title="Total de pontos recebidos des de iniciar."></img></td>
+              <td class="pontosD" style="text-align: center; width: 60px;"><h5>${pontosC}</h5></td>
+              <td style="text-align: center; width: 25px;"><img src="/graphic/quests_new/new_quest_icon_small.png" title="Total de recompensas recebida."></img></td>
+              <td class="recompD" style="text-align: center"><h5>${recomp}</h5></td>
+            </tr>
+            <tr>
+              <td colspan="6" style="text-align: center; padding: 10px; width: 270px"><label class="StatusLab"><h5>PARADO</h5></label></td>
+            </tr>
+            <tr>
+              <td colspan="6" style="text-align: center; padding-bottom: 5px"><label class="statusLab">...</label></td>
+            </tr>
+            <tr>
+              <td style="text-align: center; padding: 10px;" colspan="6">
+    <button class="iniciarBtn btn" style="margin-right: 10px;">Iniciar</button>
+    <button class="pausarBtn btn" style="margin-right: 10px;">Pausar</button>
+    <button class="pararBtn btn" style="margin-right: 10px;">Parar</button>
+    <button class="ordemBtn btn" style="margin-right: 10px;">Sim</button>
+    <button class="questBtn btn" title="Priorizar Quest: Desligado.">Não</button>
+</td>
+            </tr>
+          </tbody></table>
+        </td>`
+    return html;
+    }
 
-td.classList = 'opcoestd';
-document.querySelector('.shadedBG').appendChild(td);
-document.querySelector('.opcoestd').appendChild(createEle('tr'))
-document.querySelector('.opcoestd').children[0].appendChild(createEle('td'))
-document.querySelector('.opcoestd').children[0].children[0].appendChild(createEle('label','PARADO','StatusLab'))
-document.querySelector('.opcoestd').appendChild(createEle('tr'))
-document.querySelector('.opcoestd').children[1].appendChild(createEle('td'))
-document.querySelector('.opcoestd').children[1].children[0].appendChild(createEle('button','Iniciar','iniciarBtn','Iniciar o Script'))
-document.querySelector('.opcoestd').children[1].children[0].appendChild(createEle('button','Pausar','pausarBtn','Pausar o Script'))
-document.querySelector('.opcoestd').children[1].children[0].appendChild(createEle('button',botao,'ordemBtn','SIM, Construir Em Ordem. | NAO, Construir Qualquer Edificil Disponivel.'))
-document.querySelector('.opcoestd').children[1].children[0].appendChild(createEle('button',botao2,'questBtn','Construir Priorizando Quest'))
-
-//*************************** Stilizando ***************************//
-
-document.querySelector('.StatusLab').style.cssText = 'margin: 65px;' + 'font-weight: bold;'
-document.querySelector('.pausarBtn').style.cssText = 'margin: 2px;'
-document.querySelector('.iniciarBtn').style.cssText = 'margin: 2px;'
-document.querySelector('.ordemBtn').style.cssText = 'margin: 2px;'
-document.querySelector('.questBtn').style.cssText = 'margin: 2px;'
-document.querySelector('.opcoestd').children[0].children[0].colSpan = '2';
-document.querySelector('.opcoestd').children[0].children[0].style.cssText = 'padding-top: 18px;' + 'padding-bottom: 10px;'
-document.querySelector('.opcoestd').style.cssText = 'padding-top: 200px;'+'position: absolute;'
-document.querySelector('.opcoestd').children[0].style.cssText = 'background-color: white;'
-document.querySelector('.opcoestd').children[1].style.cssText = 'background-color: white;'
 
 function createEle(ele,texto = '',clas,titulo){
     let EleCriado = document.createElement(ele);
@@ -1012,6 +1140,7 @@ function createEle(ele,texto = '',clas,titulo){
 }
 
 document.querySelector('.iniciarBtn').addEventListener('click',function(){
+    let estado = JSON.parse(localStorage.getItem('Estado'));
     let stringJSON = JSON.stringify(1);
     localStorage.setItem('Estado', stringJSON);
     verifica();
@@ -1021,6 +1150,18 @@ document.querySelector('.pausarBtn').addEventListener('click',function(){
     localStorage.setItem('Estado', stringJSON);
     clearInterval(principal);
     clearInterval(secundario);
+    verifica();
+})
+document.querySelector('.pararBtn').addEventListener('click',function(){
+    let stringJSON = JSON.stringify(3);
+    localStorage.setItem('Estado', stringJSON);
+    clearInterval(principal);
+    clearInterval(secundario);
+    pontos = parseInt(document.querySelector('#rank_points').innerHTML)
+    let stringJSON2 = JSON.stringify(pontos);
+    localStorage.setItem('PontosComeco', stringJSON2);
+    pontosC = parseInt(document.querySelector('#rank_points').innerHTML) - pontos
+    document.querySelector('.pontosD').innerHTML = `<h5>${pontosC}</h5>`;
     verifica();
 })
 document.querySelector('.ordemBtn').addEventListener('click',function(){
@@ -1033,16 +1174,27 @@ document.querySelector('.questBtn').addEventListener('click',function(){
 function verifica(){
     if(localStorage.getItem('Estado') === '1'){
         startScript();
+        inicarTimer();
         Secundario();
-        document.querySelector('.StatusLab').innerText = 'RODANDO';
+        document.querySelector('.StatusLab').innerHTML = '<h5>RODANDO</h5>';
         document.querySelector('.StatusLab').style.cssText += 'color: green;'
     }else if(localStorage.getItem('Estado') === '0'){
-        document.querySelector('.StatusLab').innerText = 'PAUSADO';
+        document.querySelector('.StatusLab').innerHTML = '<h5>PAUSADO</h5>';
         document.querySelector('.StatusLab').style.cssText += 'color: red;'
+        clearInterval(hora);
+    }else{
+        document.querySelector('.StatusLab').innerHTML = '<h5>PARADO</h5>';
+        document.querySelector('.StatusLab').style.cssText += 'color: black;'
+        clearInterval(hora);
+        ss = 0;
+        document.querySelector('.tempoD').innerHTML = `<h5>${timer1(ss)}</h5>`;
+        recomp = 0;
+        let stringJSON3 = JSON.stringify(0);
+        localStorage.setItem('Recomp', stringJSON3);
+        document.querySelector('.recompD').innerHTML = `<h5>${recomp}</h5>`;
     }
 }
-
-if(botao === undefined || botao === null){
+if(botao === undefined || botao === null || botao === 'Sim'){
     Construção_Edificios_Ordem = true;
     let stringJSON = JSON.stringify('Sim');
     localStorage.setItem('Ordem', stringJSON);
@@ -1058,11 +1210,11 @@ if(botao2 === undefined || botao2 === null){
     let stringJSON = JSON.stringify('Não');
     localStorage.setItem('Quests', stringJSON);
     document.querySelector('.questBtn').innerText = 'Não'
-    document.querySelector('.questBtn').title = 'Priorizar Quest: Desligado'
+    document.querySelector('.questBtn').title = 'Priorizar Quest: Desligado.'
 }else if(botao2 === 'Sim'){
     Construção_Edificios_Quest = true;
     document.querySelector('.questBtn').innerText = 'Sim'
-    document.querySelector('.questBtn').title = 'Priorizar Quest: Ligado'
+    document.querySelector('.questBtn').title = 'Priorizar Quest: Ligado.'
 }
 verifica();
 
