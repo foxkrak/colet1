@@ -9,16 +9,13 @@ var total = 0;
 let ss = 0;
 let confbtn = false;
 let intervalo2;
-
+let start;
+twcheese1();
 ss = JSON.parse(localStorage.getItem('TimerRodando'))
 total = JSON.parse(localStorage.getItem('TotalRecursoColetado'));
 format2 = (new Intl.NumberFormat('dec', { style: 'decimal' }).format(total));
 let totalDiv3 = Math.round(total / 3);
 let format3 = (new Intl.NumberFormat('dec', { style: 'decimal' }).format(totalDiv3));
-document.querySelector('#content_value').querySelector('h2').style.cssText = 'text-align: center'
-document.querySelector('#content_value').querySelector('img').style.display = 'none'
-document.querySelector('#content_value').querySelector('td').style.display = 'none'
-$('#content_value').find('h2').html('[Auto Coleta] Criado por Foxkrak</br></br>Tempo:' + ' ' + timer1(ss) + '⁣⁣      ' + 'Total de Recurso Coletado: ' + format2 + '</br></br>' + 'Madeira: ' + format3 + '&nbsp;&nbsp;&nbsp;Argila: ' + format3+ '&nbsp;&nbsp;&nbsp;Ferro: ' + format3)
 
 function resetar(){
     total = JSON.parse(localStorage.getItem('TotalRecursoColetado'));
@@ -26,9 +23,6 @@ function resetar(){
 
 function twcheese1(){
     javascript: (window.TwCheese && TwCheese.tryUseTool('ASS')) || $.ajax('https://cheesasaurus.github.io/twcheese/launch/ASS.js?' +~~((new Date())/3e5),{cache:1,dataType:"script"});void 0;
-    setTimeout(function(){document.querySelector('#content_value').querySelector('span').style.cssText = 'display: none;'},400)
-    console.log('Chamou TW')
-
 }
 
 function timer1(segundos){
@@ -40,36 +34,53 @@ function inicarTimer(){
         ss++
         timerRodando = JSON.stringify(ss);
         localStorage.setItem('TimerRodando', timerRodando);
-        document.querySelector('.StatusLab').innerText = 'RODANDO';
+        document.querySelector('.StatusLab').innerHTML = '<h5>RODANDO</h5>';
         document.querySelector('.StatusLab').style.cssText += 'color: green;'
     },1000)
 }
 
-//*************************** CRIANDO OS ELEMENTOS CONFIGURANDO E DANDO FUNÇÃO ***************************//
-
-document.querySelector('.shadedBG').appendChild(createEle('td',undefined,'opcoestd'))
-document.querySelector('.opcoestd').appendChild(createEle('tr'))
-document.querySelector('.opcoestd').children[0].appendChild(createEle('td'))
-document.querySelector('.opcoestd').children[0].children[0].appendChild(createEle('label','PARADO','StatusLab'))
-document.querySelector('.opcoestd').appendChild(createEle('tr'))
-document.querySelector('.opcoestd').children[1].appendChild(createEle('td'))
-document.querySelector('.opcoestd').children[1].children[0].appendChild(createEle('button','Iniciar','iniciarBtn'))
-document.querySelector('.opcoestd').children[1].children[0].appendChild(createEle('button','Pausar','pausarBtn'))
-document.querySelector('.opcoestd').children[1].children[0].appendChild(createEle('button','Zerar','zerarBtn'))
-document.querySelector('.opcoestd').children[1].children[0].appendChild(createEle('button','NaN','confBtn'))
-
-//*************************** Stilizando ***************************//
-
-document.querySelector('.StatusLab').style.cssText = 'margin: 35%;' + 'font-weight: bold;'
-document.querySelector('.pausarBtn').style.cssText = 'margin: 2px;'
-document.querySelector('.iniciarBtn').style.cssText = 'margin: 2px;'
-document.querySelector('.zerarBtn').style.cssText = 'margin: 2px;'
-document.querySelector('.confBtn').style.cssText = 'margin: 2px;'
-document.querySelector('.opcoestd').children[0].children[0].colSpan = '2';
-document.querySelector('.opcoestd').children[0].children[0].style.cssText = 'padding-top: 18px;' + 'padding-bottom: 10px;'
-document.querySelector('.opcoestd').style.cssText = 'padding-top: 200px;'+'position: absolute;'
-document.querySelector('.opcoestd').children[0].style.cssText = 'background-color: white;'
-document.querySelector('.opcoestd').children[1].style.cssText = 'background-color: white;'
+//*************************** CRIANDO OS ELEMENTOS CONFIGURANDO E DANDO FUNÇÃO ***************************
+function html(){
+    let html = `<td class="opcoestd content-border border-frame-gold-red" style="margin-top: 200px; position: absolute;">
+      <table class="vis">
+            <tbody><tr class="border-frame-gold-red">
+              <td style="text-align: center; padding-top: 10px; width: 290px" class="avisos" colspan="6"><h3>[Auto Coleta]</h3></td>
+            </tr>
+            <tr>
+              <td style="text-align: center; width: 5px;"><span class="icon header time"></span></td>
+              <td class="tempoD" colspan="2" style="text-align: center"><h5>${timer1(ss)}</h5></td>
+              <td style="text-align: center; width: 5px;"><span class="icon header ressources"></span></td>
+              <td class="totalD" colspan="2" style="text-align: center"><h5>${format2}</h5></td>
+            </tr>
+            <tr>
+              <td style="text-align: center;"><span class="icon header wood"> </span></td>
+              <td class="madeira" style="text-align: center; width: 60px;">${format3}</td>
+              <td style="text-align: center; width: 5px;"><span class="icon header stone"> </span></td>
+              <td class="argila" style="text-align: center; width: 60px;">${format3}</td>
+              <td style="text-align: center; width: 5px;"><span class="icon header iron"> </span></td>
+              <td class="ferro" style="text-align: center; width: 60px;">${format3}</td>
+            </tr>
+            <tr>
+              <td colspan="6" style="text-align: center; padding: 10px; width: 270px"><label class="StatusLab"><h5>PARADO</h5></label></td>
+            </tr>
+            <tr>
+              <td colspan="6" style="text-align: center; padding-bottom: 5px"><label class="statusLab">...</label></td>
+            </tr>
+            <tr>
+              <td style="text-align: center; padding: 10px;" colspan="6">
+    <button class="iniciarBtn btn" style="margin-right: 10px;">Iniciar</button>
+    <button class="pausarBtn btn" style="margin-right: 10px;">Pausar</button>
+    <button class="zerarBtn btn" style="margin-right: 10px;">Zerar</button>
+    <button class="confBtn btn">Igual</button>
+</td>
+            </tr>
+          </tbody></table>
+        </td>`
+    return html;
+    }
+document.querySelector('.shadedBG').appendChild(createEle('td',undefined,'opcoestd content-border border-frame-gold-red'))
+document.querySelector('.opcoestd').innerHTML = html();
+document.querySelector('.opcoestd').style.cssText = 'margin-top: 200px;'+'position: absolute;'
 
 function createEle(ele,texto = '',clas){
     let EleCriado = document.createElement(ele);
@@ -77,7 +88,13 @@ function createEle(ele,texto = '',clas){
     if(clas !== undefined) EleCriado.classList = clas;
     return EleCriado;
 }
-
+function html2(){
+    document.querySelector('.tempoD').querySelector('h5').innerHTML = `${timer1(ss)}`
+    document.querySelector('.totalD').querySelector('h5').innerHTML = `${format2}`
+    document.querySelector('.madeira').innerHTML = `${format3}`
+    document.querySelector('.argila').innerHTML = `${format3}`
+    document.querySelector('.ferro').innerHTML = `${format3}`
+}
 document.querySelector('.iniciarBtn').addEventListener('click',function(){
     let stringJSON = JSON.stringify(1);
     localStorage.setItem('AutoColeta', stringJSON);
@@ -97,12 +114,12 @@ document.querySelector('.zerarBtn').addEventListener('click',function(){
     ss = 0;
     timerRodando = JSON.stringify(ss);
     localStorage.setItem('TimerRodando', timerRodando);
-    document.querySelector('.StatusLab').innerText = 'ZERADO';
+    document.querySelector('.StatusLab').innerHTML = '<h5>ZERADO</h5>';
     document.querySelector('.StatusLab').style.cssText += 'color: red;'
     resetar();
     format2 = (new Intl.NumberFormat('dec', { style: 'decimal' }).format(total));
-    $('#content_value').find('h2').html('[Auto Coleta] Criado por Foxkrak</br></br>Tempo:' + ' ' + timer1(ss) + '⁣⁣      ' + 'Total de Recurso Coletado: ' + format2 + '</br></br>' + 'Madeira: ' + format3 + '&nbsp;&nbsp;&nbsp;Argila: ' + format3+ '&nbsp;&nbsp;&nbsp;Ferro: ' + format3)
-})
+    html2();
+    })
 document.querySelector('.confBtn').addEventListener('click',function(){
     verificaconfbtn();
 })
@@ -154,7 +171,7 @@ function verificaconfbtn(){
 async function verifica(){
     if(localStorage.getItem('AutoColeta') === '1'){
         inicarTimer();
-        document.querySelector('.StatusLab').innerText = 'RODANDO';
+        document.querySelector('.StatusLab').innerHTML = '<h5>RODANDO</h5>';
         document.querySelector('.StatusLab').style.cssText += 'color: green;'
         //total = JSON.parse(localStorage.getItem('TotalRecursoColetado'))
         teste = false;
@@ -167,23 +184,25 @@ async function verifica(){
             }
         }
     }else if(localStorage.getItem('AutoColeta') === '0'){
-        document.querySelector('.StatusLab').innerText = 'PAUSADO';
+        document.querySelector('.StatusLab').innerHTML = '<h5>PAUSADO</h5>';
         document.querySelector('.StatusLab').style.cssText += 'color: red;'
         clearInterval(hora);
         clearInterval(intervalo2);
+        clearInterval(start)
         intervalo = false;
     }
 }
-async function loading() {
-    return new Promise(resolve => {
-        let interval = setInterval(function(){
+function loading() {
+    return new Promise(async resolve => {
+        let teste = true;
+        while(teste){
             if(document.querySelector('#loading_content').style.display === 'inline'){
                 console.log('Loading..')
             }else{
-            clearInterval(interval)
-                resolve(2)
+                resolve(teste = false);
             }
-        },100)
+            await delayS(200);
+        }
     });
 }
 verifica();
@@ -196,8 +215,12 @@ function delayS(delayInms) {
     });
 }
 function inputTrop(){
+    let tropas = 0;
     for(let itens of document.querySelectorAll('.unitsInput')){
-        if(parseInt(itens.value)>= 10){
+        if(itens.value !== ''){
+            tropas += parseInt(itens.value);
+        }
+        if(tropas>= 10){
             return true;
         }
     }
@@ -211,59 +234,121 @@ function trops(){
     }
     return false;
 }
+async function ClicaColeta(valor){
+    let teste = true;
+    return new Promise(async resolve => {
+        while(teste){
+            if(document.querySelectorAll('.free_send_button')[valor] !== null){
+                document.querySelectorAll('.free_send_button')[valor].click();
+                await loading();
+            }
+            if(document.querySelectorAll('.return-countdown')[valor] !== null){
+                total += parseInt(document.querySelectorAll('.wood-value')[valor].innerText) + parseInt(document.querySelectorAll('.stone-value')[valor].innerText) + parseInt(document.querySelectorAll('.iron-value')[valor].innerText);
+                RecursosColetados = JSON.stringify(total);
+                localStorage.setItem('TotalRecursoColetado', RecursosColetados);
+                resolve(teste = false);
+            }
+            await delayS(200);
+        }
+        });
+}
 
 async function StartS(){
+    var recaptcha = document.getElementsByClassName('recaptcha-checkbox-checkmark');
+    if (recaptcha.length != 0){
+        //document.documentElement.getElementsByClassName('recaptcha-checkbox-checkmark')[0].click();
+        document.querySelector('.statusLab').innerText = 'Capctha...';
+        let stringJSON = JSON.stringify(0);
+        localStorage.setItem('AutoColeta', stringJSON);
+        verifica();
+        teste = true;
+    }
     intervalo2 = setInterval(function(){
         totalDiv3 = Math.round(total / 3);
         format3 = (new Intl.NumberFormat('dec', { style: 'decimal' }).format(totalDiv3));
         format2 = (new Intl.NumberFormat('dec', { style: 'decimal' }).format(total));
-        $('#content_value').find('h2').html('[Auto Coleta] Criado por Foxkrak</br></br>Tempo:' + ' ' + timer1(ss) + '⁣⁣      ' + 'Total de Recurso Coletado: ' + format2 + '</br></br>' + 'Madeira: ' + format3 + '&nbsp;&nbsp;&nbsp;Argila: ' + format3+ '&nbsp;&nbsp;&nbsp;Ferro: ' + format3)
-        var recaptcha = document.getElementsByClassName('recaptcha-checkbox-checkmark');
-        if (recaptcha.length != 0){
-            document.documentElement.getElementsByClassName('recaptcha-checkbox-checkmark')[0].click();
-        }
+        html2();
     },500)
     while(intervalo){
+        if(document.querySelector('#loading_content').style.display === 'inline' && $('.return-countdown').find('a').length !== 0){
+            location.reload();
+        }
+        let unlock = 4 - document.querySelectorAll('.unlock-button').length
         if(confbtn){
-            if(document.readyState === 'complete' && document.querySelectorAll('.return-countdown').length === 0){
-                if(trops()){
-                    twcheese1();
-                }
-                for(let k = document.querySelectorAll('.free_send_button').length-1; k>=0;k--){
-                    await delayS(500);
+            if(document.querySelectorAll('.return-countdown').length !== 0){document.querySelector('.statusLab').innerText = 'Esperando todas as coletas terminarem.';}
+            if(document.readyState === 'complete' && document.querySelectorAll('.return-countdown').length === 0 && document.querySelectorAll('.free_send_button').length === unlock){
+                twcheese1();
+                while(document.querySelectorAll('.free_send_button').length > 0){
+                let k = document.querySelectorAll('.free_send_button').length-1
+                console.log(k)
                     if(inputTrop()){
-                        if(document.querySelectorAll('.free_send_button').length > 0){
-                            console.log('Clicando em '+ k)
-                            document.querySelectorAll('.free_send_button')[k].click();
-                            await loading();
-                            total += parseInt(document.querySelectorAll('.wood-value')[k].innerText) + parseInt(document.querySelectorAll('.stone-value')[k].innerText) + parseInt(document.querySelectorAll('.iron-value')[k].innerText);
-                            RecursosColetados = JSON.stringify(total);
-                            localStorage.setItem('TotalRecursoColetado', RecursosColetados);
+                        switch(k){
+                            case 3:
+                                console.log('Clicando em Extrema Coleta.')
+                                document.querySelector('.statusLab').innerText = 'Clicando em Extrema Coleta.';
+                                await ClicaColeta(k);
+                                break;
+                            case 2:
+                                console.log('Clicando em Grande Coleta.')
+                                document.querySelector('.statusLab').innerText = 'Clicando em Grande Coleta.';
+                                await ClicaColeta(k);
+                                break;
+                            case 1:
+                                console.log('Clicando em Média Coleta.')
+                                document.querySelector('.statusLab').innerText = 'Clicando em Média Coleta.';
+                                await ClicaColeta(k);
+                                break;
+                            case 0:
+                                console.log('Clicando em Pequena Coleta.')
+                                document.querySelector('.statusLab').innerText = 'Clicando em Pequena Coleta.';
+                                await ClicaColeta(k);
+                                break;
                         }
+                    }else{
+                        document.querySelector('.statusLab').innerText = 'Total de tropas menor que 10, não posso prosseguir.';
                     }
+                    await delayS(100)
                 }
             }
         }else{
+            if(document.querySelectorAll('.return-countdown').length !== 0){document.querySelector('.statusLab').innerText = 'Esperando qualquer coleta terminar.';}
             if(document.querySelectorAll('.return-countdown').length <= 4 && document.querySelectorAll('.free_send_button').length !== 0){
-                if(trops()){
-                    twcheese1();
-                }
-                if(inputTrop()){
-                    if(document.querySelectorAll('.free_send_button').length > 0){
-                        let k = document.querySelectorAll('.free_send_button').length-1
-                        document.querySelectorAll('.free_send_button')[k].click();
-                        await loading();
-                        total += parseInt(document.querySelectorAll('.wood-value')[k].innerText) + parseInt(document.querySelectorAll('.stone-value')[k].innerText) + parseInt(document.querySelectorAll('.iron-value')[k].innerText);
-                        RecursosColetados = JSON.stringify(total);
-                        localStorage.setItem('TotalRecursoColetado', RecursosColetados);
-                        console.log('Clicando em '+ k)
-                    }
+                let k = document.querySelectorAll('.free_send_button').length-1
+                twcheese1();
+                switch(k){
+                    case 3:
+                        if(inputTrop()){
+                            console.log('Clicando em Extrema Coleta.')
+                            document.querySelector('.statusLab').innerText = 'Clicando em Extrema Coleta.';
+                            await ClicaColeta(k);
+                        }
+                        break;
+                    case 2:
+                        if(inputTrop()){
+                            console.log('Clicando em Grande Coleta.')
+                            document.querySelector('.statusLab').innerText = 'Clicando em Grande Coleta.';
+                            await ClicaColeta(k);
+                        }
+                        break;
+                    case 1:
+                        if(inputTrop()){
+                            console.log('Clicando em Média Coleta.')
+                            document.querySelector('.statusLab').innerText = 'Clicando em Média Coleta.';
+                            await ClicaColeta(k);
+                        }
+                        break;
+                    case 0:
+                        if(inputTrop()){
+                            console.log('Clicando em Pequena Coleta.')
+                            document.querySelector('.statusLab').innerText = 'Clicando em Pequena Coleta.';
+                            await ClicaColeta(k);
+                        }
+                        break;
                 }
             }
         }
-        await delayS(300);
+        await delayS(100);
     }
 }
-twcheese1();
 var duracao = Date.now() - antes;
 console.log('Terminou em ' + duracao + 'ms');
