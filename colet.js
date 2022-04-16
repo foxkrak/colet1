@@ -44,7 +44,7 @@ function html(){
     let html = `<td class="opcoestd content-border border-frame-gold-red" style="margin-top: 200px; position: absolute;">
       <table class="vis">
             <tbody><tr class="border-frame-gold-red">
-              <td style="text-align: center; padding-top: 10px; padding-bottom: 2px; width: 290px" class="avisos" colspan="6"><h3 class="premium_account_hint">[Auto Coleta]</h3></td>
+              <td style="text-align: center; padding-top: 5px; padding-bottom: 2px; width: 290px" class="avisos" colspan="6"><h3 class="premium_account_hint">[Auto Coleta]</h3></td>
             </tr>
             <tr>
               <td style="text-align: center; width: 5px;"><span class="icon header time"></span></td>
