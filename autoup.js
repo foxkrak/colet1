@@ -1089,7 +1089,7 @@ function inicarTimer(){
         document.querySelector('.StatusLab').style.cssText += 'color: green;'
         if(pontos !== null || pontos !== undefined){
             pontos = JSON.parse(localStorage.getItem('PontosComeco'));
-            pontosC = parseInt(document.querySelector('#rank_points').innerHTML) - pontos
+            pontosC = parseInt(document.querySelector('#rank_points').innerText.replace('.','')) - pontos
             document.querySelector('.pontosD').innerHTML = `<h5>${pontosC}</h5>`;
         }
     },1000)
