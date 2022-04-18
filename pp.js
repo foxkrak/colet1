@@ -16,6 +16,7 @@ let taxa;
 let acima;
 let play;
 let btn;
+let entrada;
 
 //###########################################
 premiumpp = JSON.parse(localStorage.getItem('PP'));
@@ -25,6 +26,11 @@ if(play === true){
     start();
 }else{
     btn = 'Iniciar';
+}
+if(parseInt(document.querySelector('#market_status_bar').querySelectorAll('th')[2].innerText.replace('Entrada: ','')) === null || parseInt(document.querySelector('#market_status_bar').querySelectorAll('th')[2].innerText.replace('Entrada: ','')) === undefined){
+    entrada = 0;
+}else{
+   entrada = parseInt(document.querySelector('#market_status_bar').querySelectorAll('th')[2].innerText.replace('Entrada: ',''));
 }
 //################# HTML ####################
 
@@ -36,7 +42,7 @@ function html(){
             </tr>
             <tr>
               <td style="text-align: center; width: 5px;"><span class="icon header premium" title="Pontos entrando."></span></td>
-              <td class="resultado" style="text-align: center"><h5>${parseInt(document.querySelector('#market_status_bar').querySelectorAll('th')[2].innerText.replace('Entrada: ',''))}</h5></td>
+              <td class="resultado" style="text-align: center"><h5>${entrada}</h5></td>
               <td style="text-align: center; width: 5px;"><span class="icon header premium" title="Pontos ganhos até agora."></span></td>
               <td class="totalD" style="text-align: center"><h5>${parseInt(document.querySelector('#premium_points').innerText) - premiumpp}</h5></td>
             </tr>
