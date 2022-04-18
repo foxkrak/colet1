@@ -23,7 +23,6 @@ premiumpp = JSON.parse(localStorage.getItem('PP'));
 play = JSON.parse(localStorage.getItem('Play'));
 if(play === true){
     btn = 'Parar';
-    start();
 }else{
     btn = 'Iniciar';
 }
@@ -114,6 +113,7 @@ if(play === null || play === undefined){
 if(play === true){
     document.querySelector('.StatusLab').querySelector('h5').innerText = "RODANDO";
     document.querySelector('.StatusLab').style.cssText += 'color: green;'
+    start();
 }else{
     document.querySelector('.StatusLab').querySelector('h5').innerText = "PARADO";
     document.querySelector('.StatusLab').style.cssText += 'color: red;'
@@ -211,9 +211,11 @@ setInterval(function(){
 
 async function start(){
     while(play){
-        if(parseInt(document.querySelector('#market_merchant_available_count').innerText) === 0){document.querySelector('.statusLab').innerText = 'Aguardando mercadores ficarem disponiveis.';}
-        if(woodx < wood+acima){document.querySelector('.statusLab').innerText = 'Aguardando recursos suficientes.';}
-        if(taxa < Math.max(wood,stone,iron)){document.querySelector('.statusLab').innerText = 'Aguardando taxa descer abaixo do valor indicado.';}
+        if(taxa < Math.max(wood,stone,iron)){
+            document.querySelector('.statusLab').innerText = 'Aguardando taxa descer abaixo do valor indicado.';
+        }else if(parseInt(document.querySelector('#market_merchant_available_count').innerText) === 0){
+            document.querySelector('.statusLab').innerText = 'Aguardando mercadores ficarem disponiveis.';
+        }else if(woodx < wood+acima){document.querySelector('.statusLab').innerText = 'Aguardando recursos suficientes.';}
         if(woodx >= stonex && woodx >= ironx){
             if(wood <= taxa && woodx > wood+acima && parseInt(document.querySelector('#market_merchant_available_count').innerText) > 0){
                 recursoTotal = mercadores * 1000;
