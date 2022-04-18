@@ -203,8 +203,10 @@ setInterval(function(){
     stonex = parseInt(document.querySelector('#stone').innerText);
     ironx = parseInt(document.querySelector('#iron').innerText);
     premiumpp = JSON.parse(localStorage.getItem('PP'));
+    if(document.querySelector('#market_status_bar').querySelectorAll('th')[2] === null || document.querySelector('#market_status_bar').querySelectorAll('th')[2] === undefined){
+        entrada = 0;
+    }else{document.querySelector('.resultado').querySelector('h5').innerText = `${parseInt(document.querySelector('#market_status_bar').querySelectorAll('th')[2].innerText.replace('Entrada: ',''))}`}
     document.querySelector('.totalD').querySelector('h5').innerText = `${parseInt(document.querySelector('#premium_points').innerText) - premiumpp}`
-    document.querySelector('.resultado').querySelector('h5').innerText = `${parseInt(document.querySelector('#market_status_bar').querySelectorAll('th')[2].innerText.replace('Entrada: ',''))}`
 },1000)
 
 async function start(){
