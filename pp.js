@@ -203,7 +203,6 @@ setInterval(function(){
     stonex = parseInt(document.querySelector('#stone').innerText);
     ironx = parseInt(document.querySelector('#iron').innerText);
     premiumpp = JSON.parse(localStorage.getItem('PP'));
-    if(taxa < Math.max(wood,stone,iron)){document.querySelector('.statusLab').innerText = 'Aguardando taxa descer abaixo do valor indicado.';}
     if(document.querySelector('#market_status_bar').querySelectorAll('th')[2] === null || document.querySelector('#market_status_bar').querySelectorAll('th')[2] === undefined){
         entrada = 0;
     }else{document.querySelector('.resultado').querySelector('h5').innerText = `${parseInt(document.querySelector('#market_status_bar').querySelectorAll('th')[2].innerText.replace('Entrada: ',''))}`}
@@ -214,6 +213,7 @@ async function start(){
     while(play){
         if(parseInt(document.querySelector('#market_merchant_available_count').innerText) === 0){document.querySelector('.statusLab').innerText = 'Aguardando mercadores ficarem disponiveis.';}
         if(woodx < wood+acima){document.querySelector('.statusLab').innerText = 'Aguardando recursos suficientes.';}
+        if(taxa < Math.max(wood,stone,iron)){document.querySelector('.statusLab').innerText = 'Aguardando taxa descer abaixo do valor indicado.';}
         if(woodx >= stonex && woodx >= ironx){
             if(wood <= taxa && woodx > wood+acima && parseInt(document.querySelector('#market_merchant_available_count').innerText) > 0){
                 recursoTotal = mercadores * 1000;
