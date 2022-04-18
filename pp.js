@@ -27,7 +27,7 @@ if(play === true){
 }else{
     btn = 'Iniciar';
 }
-if(parseInt(document.querySelector('#market_status_bar').querySelectorAll('th')[2].innerText.replace('Entrada: ','')) === null || parseInt(document.querySelector('#market_status_bar').querySelectorAll('th')[2].innerText.replace('Entrada: ','')) === undefined){
+if(document.querySelector('#market_status_bar').querySelectorAll('th')[2] === null || document.querySelector('#market_status_bar').querySelectorAll('th')[2] === undefined){
     entrada = 0;
 }else{
    entrada = parseInt(document.querySelector('#market_status_bar').querySelectorAll('th')[2].innerText.replace('Entrada: ',''));
