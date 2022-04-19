@@ -9,7 +9,7 @@
  * Approved Date: 2020-05-27
  * Mod: JawJaw
  */
-
+let lanceiro = 20;
 var scriptData = {
 	name: 'Barbs Finder',
 	version: 'v1.4.0',
@@ -467,7 +467,7 @@ function generateTableRows(barbs) {
 				<td class="ra-tac">
 					<a href="/game.php?screen=place&target=${
 						barb[0]
-					}&spear=10&sword=10" onClick="highlightOpenedCommands(this);" target="_self" rel="noopener noreferrer" class="btn">
+					}&spear=${lanceiro}" onClick="highlightOpenedCommands(this);" target="_self" rel="noopener noreferrer" class="btn">
 						${tt('Attack')}
 					</a>
 				</td>
