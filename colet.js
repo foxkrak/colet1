@@ -269,7 +269,7 @@ async function StartS(){
         if(document.querySelector('#loading_content').style.display === 'inline' && $('.return-countdown').find('a').length !== 0){
             location.reload();
         }
-        let unlock = 4 - document.querySelectorAll('.unlock-button').length
+        let unlock = 4 - document.querySelectorAll('.unlock-button').length - document.querySelectorAll('.unlock-countdown-text').length;
         if(confbtn){
             if(document.querySelectorAll('.return-countdown').length !== 0){document.querySelector('.statusLab').innerText = 'Esperando todas as coletas terminarem.';}
             if(document.readyState === 'complete' && document.querySelectorAll('.return-countdown').length === 0 && document.querySelectorAll('.free_send_button').length === unlock){
