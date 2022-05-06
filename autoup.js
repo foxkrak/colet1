@@ -25,6 +25,7 @@ let breka;
 let pontos;
 let pontosC;
 let countx;
+let prox;
 
 // Escolha se você deseja que o bot enfileire os edifícios na ordem definida (= true) ou
 // assim que um prédio estiver disponível para a fila de construção (= false)
@@ -372,6 +373,7 @@ function getConstrução_proximo_edificio() {
     let instituir;
     while(instituir === undefined && Construção_Edifcios_Serie.length > 0){
         var proximo = Construção_Edifcios_Serie.shift();
+        prox = proximo.replace('main_buildlink_','');
         if (Clicar_Upar_Edificos.hasOwnProperty(proximo)){
             let próximo_edifício = document.getElementById(proximo);
             var Visivel = próximo_edifício.offsetWidth > 0 || próximo_edifício.offsetHeight > 0;
@@ -1124,7 +1126,7 @@ function html(){
     <button class="ordemBtn btn" style="margin-right: 10px;">Sim</button>
     <button class="questBtn btn" title="Priorizar Quest: Desligado.">Não</button>
     <br><br>
-    <span style="float: right; font-size: xx-small; font-weight: normal;">Updated by WFox: v1.1</span>
+    <span style="float: right; font-size: xx-small; font-weight: normal;">Updated by WFox: v1.2</span>
 </td>
             </tr>
           </tbody></table>
