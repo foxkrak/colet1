@@ -10,6 +10,7 @@ let ss = 0;
 let confbtn = false;
 let intervalo2;
 let start;
+let unii = 0;
 twcheese1();
 ss = JSON.parse(localStorage.getItem('TimerRodando'))
 total = JSON.parse(localStorage.getItem('TotalRecursoColetado'));
@@ -73,7 +74,7 @@ function html(){
     <button class="zerarBtn btn" style="margin-right: 10px;">Zerar</button>
     <button class="confBtn btn">Igual</button>
     <br><br>
-    <span style="float: right; font-size: xx-small; font-weight: normal;">Updated by WFox: v1.3</span>
+    <span style="float: right; font-size: xx-small; font-weight: normal;">Updated by WFox: v1.4</span>
 </td>
             </tr>
           </tbody></table>
@@ -312,7 +313,14 @@ async function StartS(){
             if(document.querySelectorAll('.return-countdown').length !== 0){document.querySelector('.statusLab').innerText = 'Esperando qualquer coleta terminar.';}
             if(document.querySelectorAll('.return-countdown').length <= 4 && document.querySelectorAll('.free_send_button').length !== 0){
                 let k = document.querySelectorAll('.free_send_button').length-1
-                twcheese1();
+                for(let units of document.querySelectorAll('.units-entry-all')){
+                    unii += parseInt(units.innerText.replace('(','').replace(')',''));
+                    console.log(total)
+                    if(unii >= 10){
+                        twcheese1();
+                        unii = 0;
+                    }
+                }
                 switch(k){
                     case 3:
                         if(inputTrop()){
