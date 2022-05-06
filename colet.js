@@ -74,7 +74,7 @@ function html(){
     <button class="zerarBtn btn" style="margin-right: 10px;">Zerar</button>
     <button class="confBtn btn">Igual</button>
     <br><br>
-    <span style="float: right; font-size: xx-small; font-weight: normal;">Updated by WFox: v1.4</span>
+    <span style="float: right; font-size: xx-small; font-weight: normal;">Updated by WFox: v1.5</span>
 </td>
             </tr>
           </tbody></table>
@@ -142,6 +142,7 @@ if(status === null || status === undefined){
     let stringJSON = JSON.stringify(1);
     localStorage.setItem('Status', stringJSON)
     confbtn = true;
+    localStorage.setItem('twcheese.userConfig', localStorage.getItem('twcheese.userConfig').replace('sane_person','addict'))
     document.querySelector('.confBtn').innerText = 'Igual';
 }
 function verificaconfbtn(){
