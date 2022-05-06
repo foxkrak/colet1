@@ -72,6 +72,8 @@ function html(){
     <button class="pausarBtn btn" style="margin-right: 10px;">Pausar</button>
     <button class="zerarBtn btn" style="margin-right: 10px;">Zerar</button>
     <button class="confBtn btn">Igual</button>
+    <br><br>
+    <span style="float: right; font-size: xx-small; font-weight: normal;">Updated by WFox: v1.3</span>
 </td>
             </tr>
           </tbody></table>
