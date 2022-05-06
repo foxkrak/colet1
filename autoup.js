@@ -122,7 +122,7 @@ function executarEtapa1(){
             if(Construção_Edificios_Ordem && Construção_Edificios_Quest){
                 document.querySelector('.statusLab').innerHTML = 'Upando em ordem priorizando quests';
             }else if(Construção_Edificios_Ordem){
-                document.querySelector('.statusLab').innerHTML = 'Upando em ordem pré definida.';
+                document.querySelector('.statusLab').innerHTML = `Upando em ordem, Proximo Edificio: ${prox}`;
             }else if(Construção_Edificios_Quest){
                 document.querySelector('.statusLab').innerHTML = 'Upando sem ordem, priorizando quest.';
             }else{
