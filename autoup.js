@@ -1100,7 +1100,7 @@ function html(){
     let html = `<td class="opcoestd content-border border-frame-gold-red" style="margin-top: 200px; position: absolute;">
       <table class="vis">
             <tbody><tr class="border-frame-gold-red">
-              <td style="text-align: center; padding-top: 5px; padding-bottom: 2px; width: 290px" class="avisos" colspan="6"><h3 class="premium_account_hint">[Auto Up]</h3></td>
+              <td style="text-align: center; padding-top: 5px; padding-bottom: 2px; width: 290px" class="avisos" colspan="6"><h3>[Auto Up]</h3></td>
             </tr>
             <tr>
               <td style="text-align: center; width: 5px;"><span class="icon header time"></span></td>
@@ -1123,6 +1123,8 @@ function html(){
     <button class="pararBtn btn" style="margin-right: 10px;">Parar</button>
     <button class="ordemBtn btn" style="margin-right: 10px;">Sim</button>
     <button class="questBtn btn" title="Priorizar Quest: Desligado.">Não</button>
+    <br><br>
+    <span style="float: right; font-size: xx-small; font-weight: normal;">Updated by WFox: v1.1</span>
 </td>
             </tr>
           </tbody></table>
