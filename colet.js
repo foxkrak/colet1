@@ -127,6 +127,13 @@ document.querySelector('.confBtn').addEventListener('click',function(){
     verificaconfbtn();
 })
 let status = JSON.parse(localStorage.getItem('Status'))
+if(status === null || status === undefined){
+    let stringJSON = JSON.stringify(1);
+    localStorage.setItem('Status', stringJSON)
+    confbtn = true;
+    localStorage.setItem('twcheese.userConfig', '{"props":{"ASS":{"troopsAssigner":{"mode":"sane_person","allowedOptionIds":[1,2,3,4],"targetDurationSeconds":7200,"troops":{"spear":{"maySend":true,"reserved":0},"sword":{"maySend":true,"reserved":0},"axe":{"maySend":true,"reserved":0},"light":{"maySend":true,"reserved":0},"heavy":{"maySend":true,"reserved":0},"knight":{"maySend":true,"reserved":0}},"troopOrder":[["axe","light","marcher"],["spear","sword","archer"],["heavy"],["knight"]]}}}}'))
+    document.querySelector('.confBtn').innerText = 'Igual';
+}
 if(status === 1){
     document.querySelector('.confBtn').innerText = 'Igual';
     localStorage.setItem('twcheese.userConfig', localStorage.getItem('twcheese.userConfig').replace('sane_person','addict'))
@@ -138,13 +145,7 @@ if(status === 1){
     document.querySelector('.confBtn').title = 'Coletar o Maximo possivel na melhor coleta';
     confbtn = false;
 }
-if(status === null || status === undefined){
-    let stringJSON = JSON.stringify(1);
-    localStorage.setItem('Status', stringJSON)
-    confbtn = true;
-    localStorage.setItem('twcheese.userConfig', localStorage.getItem('twcheese.userConfig').replace('sane_person','addict'))
-    document.querySelector('.confBtn').innerText = 'Igual';
-}
+
 function verificaconfbtn(){
     status = JSON.parse(localStorage.getItem('Status'))
     if(status === 0){
