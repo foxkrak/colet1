@@ -1,69 +1,43 @@
+// ==UserScript==
+// @name         New Userscript
+// @namespace    http://tampermonkey.net/
+// @version      0.1
+// @description  try to take over the world!
+// @author       You
+// @match        https://br113.tribalwars.com.br/game.php?village=2954&screen=place&try=confirm
+// @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
+// @grant        none
+// ==/UserScript==
+
+//melhorar script usando DATE
+//buscar data do server ss = JSON.parse(localStorage.getItem('activetab'))[1]
+
 let tempo;
-let data;
-let datax;
+let timerS = JSON.parse(localStorage.getItem('activetab'))[1];
+let total;
+let horaz;
 let horax;
-let hora = $('#serverTime').text();
-let dat = $('#serverDate').text().split('/');
+let dataIr;
 if(document.querySelector('.vis').querySelectorAll('tr').length < 7){
     tempo = document.querySelector('.vis').querySelectorAll('tr')[2].querySelectorAll('td')[1].innerText.split(':');
+    total = ((Number(tempo[0])*60+Number(tempo[1]))*60+Number(tempo[2]))*1000;
 }else{
     tempo = document.querySelector('.vis').querySelectorAll('tr')[3].querySelectorAll('td')[1].innerText.split(':');
+    total = ((Number(tempo[0])*60+Number(tempo[1]))*60+Number(tempo[2]))*1000;
 }
-function calcH(horaxs){
-    let h = horaxs.split(':');
-    let horaz = parseInt(h[0]-tempo[0]);
-    let minut = parseInt(h[1]-tempo[1]);
-    let seg = parseInt(h[2]-tempo[2]);
-    if(seg<0){
-        minut -= 1
-        seg += 60
-    }
-    if(minut<0){
-        horaz -= 1;
-        minut += 60;
-    }
-    if(horaz<0){
-        horaz += 24
-    }
-    if(seg===0){seg = '00'}
-    if(minut===0){minut = '00'}
-    if(horaz===0){horaz = '00'}
-    if(seg<10){seg = `0${seg}`;}
-    if(minut<10){minut = `0${minut}`;}
-    if(horaz<10){horaz = `0${horaz}`;}
-    let conta = `${horaz}:${minut}:${seg}`
-    console.log(conta);
-    return conta;
-}
+
 (function() {
-    setInterval(async () =>{
-        hora = $('#serverTime').text()
-        dat = $('#serverDate').text().split('/');
-        data = new Date(dat[2],dat[1]-1,dat[0],hora[0],hora[1],hora[2])
-        if(datax === `${dat[2]}-${dat[1]}-${dat[0]}`){
-            if(horax !== undefined && tempo !== undefined || tempo !== null){
-                let horacalc = calcH(horax).split(':');
-                let horad = hora.split(':');
-                if(horad[0] > horacalc[0]){
-                    return;
-                }
-                if(horad[0] === horacalc[0]){
-                    if(horad[1] > horacalc[1]){
-                        return;
-                    }
-                    if(horad[1] === horacalc[1]){
-                        if(horad[2] > horacalc[2]){
-                            return;
-                        }
-                    }
-                }
-                if(hora === calcH(horax)){
-                    document.querySelector('.avisos').innerText = 'Enviando.'
-                    window.onload = document.querySelector('#troop_confirm_submit').click();
-                }
-            }
+    setInterval(() =>{
+        let dat = document.querySelector('#serverDate').innerText.split('/');
+        let h = document.querySelector('#serverTime').innerText.split(':');
+        let data = new Date(dat[2],dat[1]-1,dat[0],h[0],h[1],h[2]);
+        dataIr = new Date(horaz);
+        //timerS = JSON.parse(localStorage.getItem('activetab'))[1]+2900;
+        if(data.getDate() === dataIr.getDate() && data.getMonth() === dataIr.getMonth() && data.getFullYear() === dataIr.getFullYear() && data.getHours() === dataIr.getHours() && data.getMinutes() === dataIr.getMinutes() && data.getSeconds() === dataIr.getSeconds()){
+            document.querySelector('.avisos').innerText = 'Enviando.'
+            window.onload = document.querySelector('#troop_confirm_submit').click();
         }
-    },100)
+    },10)
 })();
 
 function html(){
@@ -78,13 +52,8 @@ function html(){
             </tr>
             <tr>
               <td style="text-align: center; width: 5px;"><span class="icon header time"></span></td>
-              <td class="tempoD" colspan="2" style="text-align: center"><h5>Data:</h5></td>
-              <td style="text-align: center; width: 5px;"><h5><input type="date" class="data" style="width: 90px"></input></h5></td>
-            </tr>
-            <tr>
-              <td style="text-align: center;"><span class="icon header time"> </span></td>
-              <td class="madeira" colspan="2" style="text-align: center; width: 60px;"><h5>Horario:</h5></td>
-              <td style="text-align: center; width: 5px;"><input class="timex" type="time" step="1" style="width: 90px"></td>
+              <td class="tempoD" style="text-align: center"><h5>Data:</h5></td>
+              <td colspan="2" style="text-align: center; width: 5px;"><h5><input type="datetime-local" class="data" step="1" style="width: auto; height: 20px; font-size: 15px;"></input></h5></td>
             </tr>
             <tr>
               <td colspan="6" style="text-align: center; padding: 10px; width: 270px"><button class="send btn" style="margin-right: 10px;">Salvar</button></td>
@@ -97,45 +66,23 @@ function html(){
 }
 document.querySelector('#content_value').appendChild(createEle('div','atackauto'))
 document.querySelector('.atackauto').innerHTML = html();
-document.querySelector('.data').value = `${dat[2]}-${dat[1]}-${dat[0]}`;
+document.querySelector('.data').valueAsNumber = timerS-10800000
 
 document.querySelector('.send').addEventListener('click',function(){
-    horax = document.querySelector('.timex').value
+    horax = document.querySelector('.data').valueAsNumber+10800000
+    horaz = horax-total
+    console.log(new Date(horaz))
     if(horax === ''){
         document.querySelector('.avisos').innerText = 'Precisa por um horario de Chegada';
         return;
     }
-    let horacalc = calcH(horax).split(':');
-    let horad = hora.split(':');
-    if(horacalc[0] === '00'){horacalc[0] = '24'}
-    if(horad[0] > horacalc[0]){
-        document.querySelector('.avisos').innerText = 'A hora de chegada tem que ser maior que o tempo de viagem das tropas!'
-        console.log('A hora de chegada tem que ser maior que o tempo de viagem das tropas!');
-        return;
-    }
-    if(horad[0] === horacalc[0]){
-        if(horad[1] > horacalc[1]){
-            document.querySelector('.avisos').innerText = 'A hora de chegada tem que ser maior que o tempo de viagem das tropas!'
-            console.log('A hora de chegada tem que ser maior que o tempo de viagem das tropas!');
-            return;
-        }
-        if(horad[1] === horacalc[1]){
-            if(horad[2] > horacalc[2]){
-                document.querySelector('.avisos').innerText = 'A hora de chegada tem que ser maior que o tempo de viagem das tropas!'
-                console.log('A hora de chegada tem que ser maior que o tempo de viagem das tropas!');
-                return;
-            }
-        }
-
-    }
-    datax = document.querySelector('.data').value
-    if(datax >= `${dat[2]}-${dat[1]}-${dat[0]}`){
+    if(timerS > horaz){
+        console.log('Já passou o tempo.')
+        document.querySelector('.avisos').innerText = 'Ja passou do tempo.'
+    }else if(timerS < horaz){
         document.querySelector('.avisos').innerText = 'Aguardando'
         document.querySelector('.send').innerText = 'Salvo'
         $('.send').prop("disabled",true);
-    }else{
-        document.querySelector('.avisos').innerText = 'Data ja passou!'
-        console.log('Data ja passou!')
     }
 })
 
