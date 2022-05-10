@@ -1,12 +1,19 @@
-let hora = $('#serverTime').text();
-let dat = $('#serverDate').text().split('/');
-let tempo = document.querySelector('.vis').querySelectorAll('tr')[3].querySelectorAll('td')[1].innerText.split(':');
+let tempo;
 let data;
 let datax;
 let horax;
+let hora = $('#serverTime').text();
+let dat = $('#serverDate').text().split('/');
+if(document.querySelector('.vis').querySelectorAll('tr').length < 7){
+    tempo = document.querySelector('.vis').querySelectorAll('tr')[2].querySelectorAll('td')[1].innerText.split(':');
+}else{
+    tempo = document.querySelector('.vis').querySelectorAll('tr')[3].querySelectorAll('td')[1].innerText.split(':');
+}
 function calcH(horaxs){
     let h = horaxs.split(':');
-    let horaz = parseInt(h[0]-tempo[0]);
+    console.log(h,horaxs);
+    let horaz = parseInt(h[0])-parseInt(tempo[0]);
+    console.log(horaz);
     let minut = parseInt(h[1]-tempo[1]);
     let seg = parseInt(h[2]-tempo[2]);
     if(seg<0){
