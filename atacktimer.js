@@ -38,7 +38,7 @@ function html(){
               <td style="text-align: center; padding-top: 5px; padding-bottom: 2px; width: 290px" class="avisos1" colspan="6"><h3>[Ataque Timer]</h3></td>
             </tr>
             <tr>
-              <td style="text-align: center; padding-top: 5px; padding-bottom: 2px; width: 290px" class="decres" colspan="6">`${decre}`</td>
+              <td style="text-align: center; padding-top: 5px; padding-bottom: 2px; width: 290px" class="decres" colspan="6"></td>
             </tr>
             <tr>
               <td style="text-align: center; padding-top: 5px; padding-bottom: 2px; width: 290px" class="avisos" colspan="6"></td>
