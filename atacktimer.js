@@ -48,8 +48,7 @@ document.querySelector('.data').valueAsNumber = timerS;
         timerS = Timing.getCurrentServerTime();
         let data = new Date(timerS);
         if(horaz !== null || horaz !== undefined){
-            decre = new Date(horaz - timerS)
-            decre.toLocaleTimeString('pt-BR', { hour12: false, timeZone: 'UTC' });
+            decre = new Date(horaz - timerS).toLocaleTimeString('pt-BR', { hour12: false, timeZone: 'UTC' });
             document.querySelector('.decres').innerText = `${decre}`
             dataIr = new Date(horaz);
             if(data.getDate() === dataIr.getDate() && data.getMonth() === dataIr.getMonth() && data.getFullYear() === dataIr.getFullYear() && data.getHours() === dataIr.getHours() && data.getMinutes() === dataIr.getMinutes() && data.getSeconds() === dataIr.getSeconds() && data.getMilliseconds() >= dataIr.getMilliseconds()){
