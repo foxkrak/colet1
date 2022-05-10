@@ -50,3 +50,4 @@ $('.server_info').append('<span class="server_info">|<font color=darkorange><b> 
  */
     var tnt_show_ms = window.setInterval(ShowTime,1);
 }
+setMS();
