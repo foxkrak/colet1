@@ -20,6 +20,7 @@ if(document.querySelector('.vis').querySelectorAll('tr').length < 7){
         let data = new Date(timerS);
         if(horaz !== null || horaz !== undefined){
             decre = new Date(horaz - timerS)
+            document.querySelector('.decres').innerText = `${decre}`
             dataIr = new Date(horaz);
             if(data.getDate() === dataIr.getDate() && data.getMonth() === dataIr.getMonth() && data.getFullYear() === dataIr.getFullYear() && data.getHours() === dataIr.getHours() && data.getMinutes() === dataIr.getMinutes() && data.getSeconds() === dataIr.getSeconds() && data.getMilliseconds() >= dataIr.getMilliseconds()){
                 document.querySelector('.avisos').innerText = 'Enviando.'
