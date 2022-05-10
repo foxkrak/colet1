@@ -29,7 +29,7 @@ if(document.querySelector('.vis').querySelectorAll('tr').length < 7){
         }
     })
 })();
-
+decre.toLocaleTimeString('pt-BR', { hour12: false, timeZone: 'UTC' });
 function html(){
     let html = `<br><td class="opcoestd content-border border-frame-gold-red" style="margin-top: 200px; position: absolute;">
       <table class="vis">
@@ -59,7 +59,6 @@ function html(){
 document.querySelector('#content_value').appendChild(createEle('div','atackauto'))
 document.querySelector('.atackauto').innerHTML = html();
 document.querySelector('.data').valueAsNumber = timerS;
-decre.toLocaleTimeString('pt-BR', { hour12: false, timeZone: 'UTC' });
 
 document.querySelector('.send').addEventListener('click',function(){
     horax = document.querySelector('.data').valueAsNumber+10800000
