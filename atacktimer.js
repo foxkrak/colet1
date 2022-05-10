@@ -13,23 +13,6 @@ if(document.querySelector('.vis').querySelectorAll('tr').length < 7){
     tempo = document.querySelector('.vis').querySelectorAll('tr')[3].querySelectorAll('td')[1].innerText.split(':');
     total = ((Number(tempo[0])*60+Number(tempo[1]))*60+Number(tempo[2]))*1000;
 }
-
-(function() {
-    setInterval(() =>{
-        timerS = Timing.getCurrentServerTime();
-        let data = new Date(timerS);
-        if(horaz !== null || horaz !== undefined){
-            decre = new Date(horaz - timerS)
-            document.querySelector('.decres').innerText = `${decre}`
-            dataIr = new Date(horaz);
-            if(data.getDate() === dataIr.getDate() && data.getMonth() === dataIr.getMonth() && data.getFullYear() === dataIr.getFullYear() && data.getHours() === dataIr.getHours() && data.getMinutes() === dataIr.getMinutes() && data.getSeconds() === dataIr.getSeconds() && data.getMilliseconds() >= dataIr.getMilliseconds()){
-                document.querySelector('.avisos').innerText = 'Enviando.'
-                window.onload = document.querySelector('#troop_confirm_submit').click();
-            }
-        }
-    })
-})();
-decre.toLocaleTimeString('pt-BR', { hour12: false, timeZone: 'UTC' });
 function html(){
     let html = `<br><td class="opcoestd content-border border-frame-gold-red" style="margin-top: 200px; position: absolute;">
       <table class="vis">
@@ -59,6 +42,23 @@ function html(){
 document.querySelector('#content_value').appendChild(createEle('div','atackauto'))
 document.querySelector('.atackauto').innerHTML = html();
 document.querySelector('.data').valueAsNumber = timerS;
+
+(function() {
+    setInterval(() =>{
+        timerS = Timing.getCurrentServerTime();
+        let data = new Date(timerS);
+        if(horaz !== null || horaz !== undefined){
+            decre = new Date(horaz - timerS)
+            document.querySelector('.decres').innerText = `${decre}`
+            dataIr = new Date(horaz);
+            if(data.getDate() === dataIr.getDate() && data.getMonth() === dataIr.getMonth() && data.getFullYear() === dataIr.getFullYear() && data.getHours() === dataIr.getHours() && data.getMinutes() === dataIr.getMinutes() && data.getSeconds() === dataIr.getSeconds() && data.getMilliseconds() >= dataIr.getMilliseconds()){
+                document.querySelector('.avisos').innerText = 'Enviando.'
+                window.onload = document.querySelector('#troop_confirm_submit').click();
+            }
+        }
+    })
+})();
+decre.toLocaleTimeString('pt-BR', { hour12: false, timeZone: 'UTC' });
 
 document.querySelector('.send').addEventListener('click',function(){
     horax = document.querySelector('.data').valueAsNumber+10800000
