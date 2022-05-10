@@ -1,9 +1,10 @@
 let tempo;
-let timerS = JSON.parse(localStorage.getItem('activetab'))[1];
+let timerS = Timing.getCurrentServerTime()-10800000;
 let total;
 let horaz;
 let horax;
 let dataIr;
+
 if(document.querySelector('.vis').querySelectorAll('tr').length < 7){
     tempo = document.querySelector('.vis').querySelectorAll('tr')[2].querySelectorAll('td')[1].innerText.split(':');
     total = ((Number(tempo[0])*60+Number(tempo[1]))*60+Number(tempo[2]))*1000;
@@ -14,17 +15,14 @@ if(document.querySelector('.vis').querySelectorAll('tr').length < 7){
 
 (function() {
     setInterval(() =>{
-        let dat = document.querySelector('#serverDate').innerText.split('/');
-        let h = document.querySelector('#serverTime').innerText.split(':');
-        //let data = new Date(dat[2],dat[1]-1,dat[0],h[0],h[1],h[2]);
         dataIr = new Date(horaz);
-        timerS = JSON.parse(localStorage.getItem('activetab'))[1]+2900;
+        timerS = Timing.getCurrentServerTime();
         let data = new Date(timerS);
         if(data.getDate() === dataIr.getDate() && data.getMonth() === dataIr.getMonth() && data.getFullYear() === dataIr.getFullYear() && data.getHours() === dataIr.getHours() && data.getMinutes() === dataIr.getMinutes() && data.getSeconds() === dataIr.getSeconds() && data.getMilliseconds() >= dataIr.getMilliseconds()){
             document.querySelector('.avisos').innerText = 'Enviando.'
             window.onload = document.querySelector('#troop_confirm_submit').click();
         }
-    },10)
+    })
 })();
 
 function html(){
@@ -53,7 +51,7 @@ function html(){
 }
 document.querySelector('#content_value').appendChild(createEle('div','atackauto'))
 document.querySelector('.atackauto').innerHTML = html();
-document.querySelector('.data').valueAsNumber = timerS-10800000
+document.querySelector('.data').valueAsNumber = timerS;
 
 document.querySelector('.send').addEventListener('click',function(){
     horax = document.querySelector('.data').valueAsNumber+10800000
