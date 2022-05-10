@@ -11,9 +11,7 @@ if(document.querySelector('.vis').querySelectorAll('tr').length < 7){
 }
 function calcH(horaxs){
     let h = horaxs.split(':');
-    console.log(h,horaxs);
-    let horaz = parseInt(h[0])-parseInt(tempo[0]);
-    console.log(horaz);
+    let horaz = parseInt(h[0]-tempo[0]);
     let minut = parseInt(h[1]-tempo[1]);
     let seg = parseInt(h[2]-tempo[2]);
     if(seg<0){
@@ -30,6 +28,9 @@ function calcH(horaxs){
     if(seg===0){seg = '00'}
     if(minut===0){minut = '00'}
     if(horaz===0){horaz = '00'}
+    if(seg<10){seg = `0${seg}`;}
+    if(minut<10){minut = `0${minut}`;}
+    if(horaz<10){horaz = `0${horaz}`;}
     let conta = `${horaz}:${minut}:${seg}`
     console.log(conta);
     return conta;
@@ -45,19 +46,20 @@ function calcH(horaxs){
                 let horad = hora.split(':');
                 if(horad[0] > horacalc[0]){
                     return;
-                }else if(horad[0] === horacalc[0]){
+                }
+                if(horad[0] === horacalc[0]){
                     if(horad[1] > horacalc[1]){
                         return;
-                    }else if(horad[1] === horacalc[1]){
+                    }
+                    if(horad[1] === horacalc[1]){
                         if(horad[2] > horacalc[2]){
                             return;
-                        }else{
-                            if(hora === calcH(horax)){
-                                document.querySelector('.avisos').innerText = 'Enviando.'
-                                window.onload = document.querySelector('#troop_confirm_submit').click();
-                            }
                         }
                     }
+                }
+                if(hora === calcH(horax)){
+                    document.querySelector('.avisos').innerText = 'Enviando.'
+                    window.onload = document.querySelector('#troop_confirm_submit').click();
                 }
             }
         }
@@ -109,27 +111,31 @@ document.querySelector('.send').addEventListener('click',function(){
     if(horad[0] > horacalc[0]){
         document.querySelector('.avisos').innerText = 'A hora de chegada tem que ser maior que o tempo de viagem das tropas!'
         console.log('A hora de chegada tem que ser maior que o tempo de viagem das tropas!');
-    }else if(horad[0] === horacalc[0]){
+        return;
+    }
+    if(horad[0] === horacalc[0]){
         if(horad[1] > horacalc[1]){
             document.querySelector('.avisos').innerText = 'A hora de chegada tem que ser maior que o tempo de viagem das tropas!'
             console.log('A hora de chegada tem que ser maior que o tempo de viagem das tropas!');
-        }else if(horad[1] === horacalc[1]){
+            return;
+        }
+        if(horad[1] === horacalc[1]){
             if(horad[2] > horacalc[2]){
                 document.querySelector('.avisos').innerText = 'A hora de chegada tem que ser maior que o tempo de viagem das tropas!'
                 console.log('A hora de chegada tem que ser maior que o tempo de viagem das tropas!');
+                return;
             }
         }
-    }else{
-        datax = document.querySelector('.data').value
-        if(datax >= `${dat[2]}-${dat[1]}-${dat[0]}`){
-            document.querySelector('.avisos').innerText = 'Aguardando'
-            document.querySelector('.send').innerText = 'Salvo'
-            $('.send').prop("disabled",true);
-        }else{
-            document.querySelector('.avisos').innerText = 'Data ja passou!'
-            console.log('Data ja passou!')
-        }
 
+    }
+    datax = document.querySelector('.data').value
+    if(datax >= `${dat[2]}-${dat[1]}-${dat[0]}`){
+        document.querySelector('.avisos').innerText = 'Aguardando'
+        document.querySelector('.send').innerText = 'Salvo'
+        $('.send').prop("disabled",true);
+    }else{
+        document.querySelector('.avisos').innerText = 'Data ja passou!'
+        console.log('Data ja passou!')
     }
 })
 
