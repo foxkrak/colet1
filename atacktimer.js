@@ -1,17 +1,3 @@
-// ==UserScript==
-// @name         New Userscript
-// @namespace    http://tampermonkey.net/
-// @version      0.1
-// @description  try to take over the world!
-// @author       You
-// @match        https://br113.tribalwars.com.br/game.php?village=2954&screen=place&try=confirm
-// @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
-// @grant        none
-// ==/UserScript==
-
-//melhorar script usando DATE
-//buscar data do server ss = JSON.parse(localStorage.getItem('activetab'))[1]
-
 let tempo;
 let timerS = JSON.parse(localStorage.getItem('activetab'))[1];
 let total;
