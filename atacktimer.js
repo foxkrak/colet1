@@ -19,7 +19,7 @@ if(document.querySelector('.vis').querySelectorAll('tr').length < 7){
         let data = new Date(dat[2],dat[1]-1,dat[0],h[0],h[1],h[2]);
         dataIr = new Date(horaz);
         //timerS = JSON.parse(localStorage.getItem('activetab'))[1]+2900;
-        if(data.getDate() === dataIr.getDate() && data.getMonth() === dataIr.getMonth() && data.getFullYear() === dataIr.getFullYear() && data.getHours() === dataIr.getHours() && data.getMinutes() === dataIr.getMinutes() && data.getSeconds() === dataIr.getSeconds()){
+        if(data.getDate() === dataIr.getDate() && data.getMonth() === dataIr.getMonth() && data.getFullYear() === dataIr.getFullYear() && data.getHours() === dataIr.getHours() && data.getMinutes() === dataIr.getMinutes() && data.getSeconds() === dataIr.getSeconds() && data.getMilliseconds() >== dataIr.getMilliseconds()){
             document.querySelector('.avisos').innerText = 'Enviando.'
             window.onload = document.querySelector('#troop_confirm_submit').click();
         }
