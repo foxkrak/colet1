@@ -26,6 +26,7 @@ let pontos;
 let pontosC;
 let countx;
 let prox;
+let qualquer = false;
 
 // Escolha se você deseja que o bot enfileire os edifícios na ordem definida (= true) ou
 // assim que um prédio estiver disponível para a fila de construção (= false)
@@ -333,6 +334,10 @@ async function verifQuest(){
     let delay = Math.floor(Math.random() * (Max_Tempo_Espera - Max_Tempo_Espera) + Min_Tempo_Espera);
 
     // Ação do processo
+if(Construção_Edificios_Ordem === false){
+      qualquer = true;
+}
+if(qualquer){
     let Evoluir_vilas = getEvoluir_vilas();
     console.log(Evoluir_vilas);
     setTimeout(function(){
@@ -348,6 +353,7 @@ async function verifQuest(){
 
         }
     }, delay);
+}
 
 function getEvoluir_vilas(){
     let currentUrl = window.location.href;
