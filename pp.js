@@ -1,26 +1,56 @@
+// ==UserScript==
+// @name         Farm de Pontos
+// @namespace    TribalWars
+// @copyright    Foxkrak 2023
+// @version      0.1
+// @description  Um script com visual para farm de pontos que pode controlar a taxa maximo que podem ser vendidos os recursos!
+// @author       Foxkrak
+// @include      https://br*.tribalwars.com.br/game.php?village=*&screen=market&mode=exchange
+// @updateURL    https://github.com/foxkrak/foxkrakScripts/raw/main/pp.js
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=tribalwars.com.br
+// @grant        none
+// ==/UserScript==
+
 //################ Variaveis ################
 
-let wood;
-let stone;
-let iron;
-let mercadores;
-let recursoTotal;
-let quantidade;
-let resultado = 0;
-let woodx;
-let stonex;
-let ironx;
-let premiumpp;
-let inputx;
-let taxa;
-let acima;
-let play;
-let btn;
-let entrada;
+//Vende recursos por pontos premiun
+var altAldTempo = aleatorio(10000, 100000);
+var qtdDisponivelTransporte;
+
+//recursos disponiveis na aldeia
+var qtdMadeiraAldeia;
+var qtdArgilaAldeia;
+var qtdFerroAldeia;
+
+//capacidade maxima de cada recurso
+var capacidadeMadeira;
+var capacidadeArgila;
+var capacidadeFerro;
+
+//quantidade estocada de cada recurso
+var estoqueMandeira;
+var estoqueArgila;
+var estoqueFerro;
+
+//campos para serem preenchidos
+var inputVenderMadeira;
+var inputVenderArgila;
+var inputVenderFerro;
+
+//LocalStorage var
+var premiumpp;
+var play;
+var btn;
+var entrada;
+var Go;
+var taxasalva;
+var htm;
+
 
 //###########################################
 premiumpp = JSON.parse(localStorage.getItem('PP'));
 play = JSON.parse(localStorage.getItem('Play'));
+taxasalva = JSON.parse(localStorage.getItem('inputV'));
 if(play === true){
     btn = 'Parar';
 }else{
@@ -46,10 +76,8 @@ function html(){
               <td class="totalD" style="text-align: center"><h5>${parseInt(document.querySelector('#premium_points').innerText) - premiumpp}</h5></td>
             </tr>
             <tr>
-            <td title="Valor maximo em que os recursos podem ser vendidos." style="text-align: center;">Taxa: </td>
-            <td title="" style="text-align: center; width: 5px;"><input class="inputC" style="width: 50px;"></input></td>
-            <td title="Esperar até que os recursos cheguem no valor de Taxa + Valor indicado." style="text-align: center;">Recurso: </td>
-            <td title="" style="text-align: center; width: 5px;"><input class="inputD" style="width: 50px;"></input></td>
+            <td title="Valor maximo em que os recursos podem ser vendidos." colspan="2" style="text-align: center; width: 50px;">Taxa: </td>
+            <td title="" colspan="2" style="text-align: center; width: 5px;"><input class="inputC" style="width: 50px;" value="${taxasalva}"></input></td>
             </tr>
             <tr>
               <td colspan="6" style="text-align: center; padding: 10px; width: 270px"><label class="StatusLab"><h5>PARADO</h5></label></td>
@@ -79,30 +107,6 @@ if(premiumpp === null || premiumpp === undefined){
     localStorage.setItem('PP', stringJSONpp);
 }
 
-inputx = JSON.parse(localStorage.getItem('inputV'));
-
-if(inputx === null || inputx === undefined){
-    let stringJSONip = JSON.stringify(600);
-    localStorage.setItem('inputV', stringJSONip);
-    inputx = JSON.parse(localStorage.getItem('inputV'))
-    document.querySelector('.inputC').value = inputx;
-    taxa = inputx;
-}else{
-    document.querySelector('.inputC').value = inputx;
-    taxa = inputx;
-}
-
-acima = JSON.parse(localStorage.getItem('Acima'));
-
-if(acima === null || acima === undefined){
-    let stringJSONip = JSON.stringify(900);
-    localStorage.setItem('Acima', stringJSONip);
-    acima = JSON.parse(localStorage.getItem('Acima'))
-    document.querySelector('.inputD').value = acima;
-}else{
-    document.querySelector('.inputD').value = acima;
-}
-
 if(play === null || play === undefined){
     let stringJSONip = JSON.stringify(false);
     localStorage.setItem('Play', stringJSONip);
@@ -117,6 +121,7 @@ if(play === true){
 }else{
     document.querySelector('.StatusLab').querySelector('h5').innerText = "PARADO";
     document.querySelector('.StatusLab').style.cssText += 'color: red;'
+    clearInterval(Go);
 }
 //################# Clicks ##################
 
@@ -137,25 +142,20 @@ document.querySelector('.playBtn').addEventListener('click',function(){
         document.querySelector('.StatusLab').querySelector('h5').innerText = "PARADO";
         document.querySelector('.StatusLab').style.cssText += 'color: red;'
         document.querySelector('.statusLab').innerText = '...';
+        clearInterval(Go);
+        clearInterval(htm);
     }
 
 })
 
 document.querySelector('.salvarBtn').addEventListener('click',function(){
-    if(parseInt(document.querySelector('.inputC').value) !== 0 && parseInt(document.querySelector('.inputC').value) > Math.max(wood,stone,iron)){
+    if(parseInt(document.querySelector('.inputC').value) !== 0){
         let stringJSONip = JSON.stringify(parseInt(document.querySelector('.inputC').value));
         localStorage.setItem('inputV', stringJSONip);
         document.querySelector('.statusLab').innerText = 'Salvo.';
     }else{
-        document.querySelector('.statusLab').innerText = `Taxa igual a 0 ou menor que ${Math.max(wood,stone,iron)}.`;
+        document.querySelector('.statusLab').innerText = `Taxa igual a 0.`;
         return;
-    }
-    if(parseInt(document.querySelector('.inputD').value) !== 0 && parseInt(document.querySelector('.inputD').value) > Math.max(wood,stone,iron)){
-        let stringJSONip = JSON.stringify(parseInt(document.querySelector('.inputD').value));
-        localStorage.setItem('Acima', stringJSONip);
-        document.querySelector('.statusLab').innerText = 'Salvo.';
-    }else{
-        document.querySelector('.statusLab').innerText = `Recurso igual a 0 ou menor que ${Math.max(wood,stone,iron)}.`;
     }
 
 })
@@ -167,120 +167,140 @@ document.querySelector('.zerarBtn').addEventListener('click',function(){
 
 //################# Funções #################
 
-function delayS(delayInms) {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve(2);
-        }, delayInms);
-    });
-}
-
-async function prosseguir(valor,ide){
-    document.querySelectorAll('.premium-exchange-input')[ide].value = valor;
-    document.querySelector('.resultado').querySelector('h5').innerHTML = `${valor}`;
-    document.querySelector('.btn-premium-exchange-buy').click();
-    await delayS(500)
-    document.querySelector('.btn-confirm-yes').click();
-    return;
-}
-
 function createEle(ele,texto = '',clas){
     let EleCriado = document.createElement(ele);
     EleCriado.innerText = texto;
     if(clas !== undefined) EleCriado.classList = clas;
     return EleCriado;
 }
+html()
 
-//###########################################
-//################# Loopins #################
+//INICIO----
 
-setInterval(function(){
-    wood = parseInt(document.querySelector('#premium_exchange_rate_wood').querySelector('div').innerText)
-    stone = parseInt(document.querySelector('#premium_exchange_rate_stone').querySelector('div').innerText)
-    iron = parseInt(document.querySelector('#premium_exchange_rate_iron').querySelector('div').innerText)
-    mercadores = parseInt(document.querySelector('#market_merchant_available_count').innerText);
-    woodx = parseInt(document.querySelector('#wood').innerText);
-    stonex = parseInt(document.querySelector('#stone').innerText);
-    ironx = parseInt(document.querySelector('#iron').innerText);
-    premiumpp = JSON.parse(localStorage.getItem('PP'));
-    if(document.querySelector('#market_status_bar').querySelectorAll('th')[2] === null || document.querySelector('#market_status_bar').querySelectorAll('th')[2] === undefined){
-        entrada = 0;
-    }else{document.querySelector('.resultado').querySelector('h5').innerText = `${parseInt(document.querySelector('#market_status_bar').querySelectorAll('th')[2].innerText.replace('Entrada: ',''))}`}
-    document.querySelector('.totalD').querySelector('h5').innerText = `${parseInt(document.querySelector('#premium_points').innerText) - premiumpp}`
-},1000)
+function start(){
+    Go = setInterval(function(){go()},10000)
+    htm = setInterval(()=>{html()},500)
+}
 
-async function start(){
-    while(play){
-        if(taxa < Math.max(wood,stone,iron)){
-            document.querySelector('.statusLab').innerText = 'Aguardando taxa descer abaixo do valor indicado.';
-        }else if(parseInt(document.querySelector('#market_merchant_available_count').innerText) === 0){
-            document.querySelector('.statusLab').innerText = 'Aguardando mercadores ficarem disponiveis.';
-        }else if(woodx < wood+acima){document.querySelector('.statusLab').innerText = 'Aguardando recursos suficientes.';}
-        if(woodx >= stonex && woodx >= ironx){
-            if(wood <= taxa && woodx > wood+acima && parseInt(document.querySelector('#market_merchant_available_count').innerText) > 0){
-                recursoTotal = mercadores * 1000;
-                quantidade = Math.floor((recursoTotal / wood));
-                resultado = wood * quantidade;
-                if(parseInt(document.querySelector('#wood').innerText)< parseInt(document.querySelector('#market_merchant_available_count').innerText) * 1000){
-                    quantidade = parseInt(document.querySelector('#wood').innerText) / wood;
-                    if(quantidade-0.5 > parseInt(quantidade)){
-                        resultado = wood * parseInt(quantidade);
-                        document.querySelector('.statusLab').innerText = 'Vendendo Madeira.';
-                        await prosseguir(resultado,3);
-                    }else{
-                        resultado = wood * (parseInt(quantidade)-1);
-                        document.querySelector('.statusLab').innerText = 'Vendendo Madeira.';
-                        await prosseguir(resultado,3);
-                    }
-                }else{
-                    document.querySelector('.statusLab').innerText = 'Vendendo Madeira.';
-                    await prosseguir(resultado,3);
-                }
-            }
-        }else if(stonex >= woodx && stonex >= ironx){
-            if(stone <= taxa && stonex > stone+acima && parseInt(document.querySelector('#market_merchant_available_count').innerText) > 0){
-                recursoTotal = mercadores * 1000;
-                quantidade = Math.floor((recursoTotal / stone));
-                resultado = stone * quantidade;
-                if(parseInt(document.querySelector('#stone').innerText)< parseInt(document.querySelector('#market_merchant_available_count').innerText) * 1000){
-                    quantidade = parseInt(document.querySelector('#stone').innerText) / stone;
-                    if(quantidade-0.5 > parseInt(quantidade)){
-                        resultado = stone * parseInt(quantidade);
-                        document.querySelector('.statusLab').innerText = 'Vendendo Argila.';
-                        await prosseguir(resultado,4);
-                    }else{
-                        resultado = stone * (parseInt(quantidade)-1);
-                        document.querySelector('.statusLab').innerText = 'Vendendo Argila.';
-                        await prosseguir(resultado,4);
-                    }
-                }else{
-                    document.querySelector('.statusLab').innerText = 'Vendendo Argila.';
-                    await prosseguir(resultado,4);
-                }
-            }
-        }else{
-            if(iron <= taxa && ironx > iron+acima && parseInt(document.querySelector('#market_merchant_available_count').innerText) > 0){
-                recursoTotal = mercadores * 1000;
-                quantidade = Math.floor((recursoTotal / iron));
-                resultado = iron * quantidade;
-                if(parseInt(document.querySelector('#iron').innerText)< parseInt(document.querySelector('#market_merchant_available_count').innerText) * 1000){
-                    quantidade = parseInt(document.querySelector('#iron').innerText) / iron;
-                    if(quantidade-0.5 > parseInt(quantidade)){
-                        resultado = iron * parseInt(quantidade);
-                        document.querySelector('.statusLab').innerText = 'Vendendo Ferro.';
-                        await prosseguir(resultado,5);
-                    }else{
-                        resultado = iron * (parseInt(quantidade)-1);
-                        document.querySelector('.statusLab').innerText = 'Vendendo Ferro.';
-                        await prosseguir(resultado,5);
-                    }
-                }else{
-                    document.querySelector('.statusLab').innerText = 'Vendendo Ferro.';
-                    await prosseguir(resultado,5);
-                }
+function go(){
+
+    qtdDisponivelTransporte = $("#market_merchant_max_transport").text();
+
+    capacidadeMadeira = $("#premium_exchange_capacity_wood").text();
+    capacidadeArgila = $("#premium_exchange_capacity_stone").text();
+    capacidadeFerro = $("#premium_exchange_capacity_iron").text();
+
+    estoqueMandeira = $("#premium_exchange_stock_wood").text();
+    estoqueArgila = $("#premium_exchange_stock_stone").text();
+    estoqueFerro = $("#premium_exchange_stock_iron").text();
+
+    inputVenderMadeira = $("input[name='sell_wood']");
+    inputVenderArgila = $("input[name='sell_stone']");
+    inputVenderFerro = $("input[name='sell_iron']");
+
+    qtdMadeiraAldeia = $("#wood").text();
+    qtdArgilaAldeia = $("#stone").text();
+    qtdFerroAldeia = $("#iron").text();
+
+    var custoMadeira = calcularCusto("wood");
+    var custoArgila = calcularCusto("stone");
+    var custoFerro = calcularCusto("iron");
+
+
+    var qtdTotalRecursos;
+    var qtdVenderMadeira = calcularQuantidadeVender(capacidadeMadeira, estoqueMandeira, qtdMadeiraAldeia, custoMadeira);
+    var qtdVenderArgila = calcularQuantidadeVender(capacidadeArgila, estoqueArgila, qtdArgilaAldeia, custoArgila);
+    var qtdVenderFerro = calcularQuantidadeVender(capacidadeFerro, estoqueFerro, qtdFerroAldeia, custoFerro);
+
+
+    if (qtdVenderMadeira > qtdDisponivelTransporte) {
+        qtdVenderMadeira = qtdDisponivelTransporte - 1000;
+    }
+    if (qtdVenderArgila > qtdDisponivelTransporte) {
+        qtdVenderMadeira = qtdDisponivelTransporte - 1000;
+    }
+    if (qtdVenderFerro > qtdDisponivelTransporte) {
+        qtdVenderMadeira = qtdDisponivelTransporte - 1000;
+    }
+
+    var algoPraVender = false;
+    taxasalva = JSON.parse(localStorage.getItem('inputV'));
+    if(taxasalva === 0 || taxasalva === null || taxasalva === undefined || taxasalva === NaN){
+        taxasalva = Math.max(custoFerro,custoMadeira,custoArgila);
+        let stringJSONip = JSON.stringify(parseInt(taxasalva));
+        localStorage.setItem('inputV', stringJSONip);
+        document.querySelector('.inputC').value = taxasalva;
+    }else{
+        document.querySelector('.inputC').value = taxasalva;
+    }
+
+    if (qtdVenderFerro > 0 && qtdVenderFerro <= qtdDisponivelTransporte && custoFerro <= taxasalva) {
+        inputVenderFerro.val(qtdVenderFerro);
+        algoPraVender = true;
+    } else if (qtdVenderArgila > 0 && qtdVenderArgila <= qtdDisponivelTransporte && custoArgila <= taxasalva) {
+        inputVenderArgila.val(qtdVenderArgila);
+        algoPraVender = true;
+    } else if (qtdVenderMadeira > 0 && qtdVenderMadeira <= qtdDisponivelTransporte && custoMadeira <= taxasalva) {
+        inputVenderMadeira.val(qtdVenderMadeira);
+        algoPraVender = true;
+    } else {
+        //console.log("Nada para vender hoje");
+        document.querySelector('.statusLab').innerText = "Nada para vender hoje.";
+    }
+
+    if (algoPraVender) {
+        setTimeout(calcularMelhorOferta, 2000);
+    }
+    //MODIFICAR SISTEMA..
+    setInterval(altAldeia, altAldTempo);
+};
+
+function calcularMelhorOferta() {
+    $(".btn-premium-exchange-buy").click();
+
+    setTimeout(confirmarVenda, 1000);
+}
+
+function confirmarVenda() {
+    $(".btn-confirm-yes").click();
+}
+
+function calcularQuantidadeVender(capacidade, estoque, qtdDisponivel, custo) {
+    var quantidadeVender = 0;
+    var capacidadeDisponivel = capacidade - estoque;
+    if (capacidadeDisponivel > 0) {
+        if (qtdDisponivel >= custo) {
+            if(capacidadeDisponivel >= custo){
+                quantidadeVender = (Math.ceil(qtdDisponivel / custo) - 1)*custo;
+            }else{
+                quantidadeVender = capacidadeDisponivel
             }
         }
-        await delayS(5000)
     }
+
+    return quantidadeVender;
 }
+
+function calcularCusto(tipoRecurso) {
+    var capacidade = PremiumExchange.data.capacity[tipoRecurso];
+    var stock = PremiumExchange.data.stock[tipoRecurso];
+
+    var fator = (PremiumExchange.data.tax.buy, PremiumExchange.calculateMarginalPrice(stock, capacidade));
+    var resultado = Math.floor(1 / fator);
+
+    return resultado;
+}
+
+function altAldeia() {
+    //$('.arrowRight').click();
+    //$('.groupRight').click();
+    //location.reload(true);
+}
+
+function aleatorio(superior, inferior) {
+    var numPosibilidades = superior - inferior;
+    var aleat = Math.random() * numPosibilidades;
+    return Math.round(parseInt(inferior) + aleat);
+}
+
 //###########################################
