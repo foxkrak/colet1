@@ -8,7 +8,7 @@
 // @include      https://br*.tribalwars.com.br/game.php?village=*&screen=market&mode=exchange
 // @updateURL    https://github.com/foxkrak/foxkrakScripts/raw/main/pp.js
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=tribalwars.com.br
-// @grant        none
+// @run-at document-end
 // ==/UserScript==
 
 //################ Variaveis ################
