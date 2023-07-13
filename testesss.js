@@ -1,12 +1,1 @@
-let listaBranca = {
-lista: [{nome: 'foxkrak', senha: 123},{nome: 'lol', senha: 321}]
-}
-function validar(nome,senha){
-    for (const i of listaBranca.lista) {
-        if(i.nome == nome){
-            if(i.senha == senha){
-                console.log('Logado')
-            }
-        }
-    }
-}
+var _0x5f24=["\x66\x6F\x78\x6B\x72\x61\x6B","\x31\x32\x33","\x6C\x6F\x6C","\x33\x32\x31","\x6C\x69\x73\x74\x61","\x6E\x6F\x6D\x65","\x73\x65\x6E\x68\x61","\x4C\x6F\x67\x61\x64\x6F","\x6C\x6F\x67"];let listaBranca={lista:[{nome:_0x5f24[0],senha:_0x5f24[1]},{nome:_0x5f24[2],senha:_0x5f24[3]}]};function validar(_0xe100x3,_0xe100x4){for(const _0xe100x5 of listaBranca[_0x5f24[4]]){if(_0xe100x5[_0x5f24[5]]== _0xe100x3){if(_0xe100x5[_0x5f24[6]]== _0xe100x4){console[_0x5f24[8]](_0x5f24[7])}}}}
