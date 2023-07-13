@@ -7,7 +7,7 @@ function validar(nome,senha){
         if(i.nome == nome){
             if(i.senha == senha){
                 console.log('Logado')
-                return 'https://foxkrak.github.io/foxkrakScripts/autoup.js'
+                $.getScript('https://foxkrak.github.io/foxkrakScripts/autoup.js');
             }
         }
     }
