@@ -391,6 +391,8 @@ function Proxima_Construção(){
                     console.log(countx + "Clicked on " + Construção_proximo_edificio);
                     Construção_proximo_edificio.click();
                     countx++
+                    let stringJSON = JSON.stringify(countx);
+                    localStorage.setItem('Countx', stringJSON);
                 }else{
                 console.log("Aguardando servidor.")
                 }
