@@ -1143,9 +1143,9 @@ function html(){
             <tr>
               <td style="text-align: center; width: 5px;"><span class="icon header time"></span></td>
               <td class="tempoD" style="text-align: center; width: 120px;"><h5>${timer1(ss)}</h5></td>
-              <td style="text-align: center; width: 25px;"><img src="/graphic/quests_new/new_quest_icon_small.png" title="Total de pontos recebidos des de iniciar."></img></td>
+              <td style="text-align: center; width: 25px;"><img src="/graphic//buildings/market.png" title="Total de pontos recebidos des de iniciar."></img></td>
               <td class="pontosD" style="text-align: center; width: 60px;"><h5>${pontosC}</h5></td>
-              <td style="text-align: center; width: 25px;"><img src="/graphic/quests_new/new_quest_icon_small.png" title="Total de recompensas recebida."></img></td>
+              <td style="text-align: center; width: 25px;"><img src="/graphic//buildings/market.png" title="Total de recompensas recebida."></img></td>
               <td class="recompD" style="text-align: center"><h5>${recomp}</h5></td>
             </tr>
             <tr>
