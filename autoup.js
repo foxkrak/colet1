@@ -11,6 +11,7 @@ https://forum.tribalwars.com.br/index.php?threads/os-5-primeiros-dias-modo-novat
 // Escolha Tempo de espera mínimo e máximo entre ações (em milissegundos)
 const Min_Tempo_Espera= 800000;
 const Max_Tempo_Espera = 900000;
+const desligarRecomp = false;
 
 // Etapa_1: Upar O bot automaticamente em Série Edificios
 let Etapa = "Etapa_1";
@@ -35,6 +36,10 @@ let Construção_Edificios_Quest;
 let botao;
 let botao2;
 let variavel = true;
+
+function attualiz() {
+    location.reload(true);
+}
 
 countx = JSON.parse(localStorage.getItem('Countx'));
 recomp = JSON.parse(localStorage.getItem('Recomp'));
@@ -155,7 +160,7 @@ function executarEtapa1(){
                     }
                 }
                 if(document.querySelectorAll('.current-quest').length === 0 && $('#buildqueue').find('b').length === 0){
-                    document.querySelector('.statusLab').innerHTML = 'Nenhuma quest, upando em ordem pré definida.';
+                    document.querySelector('.statusLab').innerHTML = `Nenhuma quest, Proximo up: ${prox}.`;
                     Proxima_Construção();
                 }
             }else if($('#buildqueue').find('b').length === 0){
@@ -182,22 +187,32 @@ function Secundario(){
         text=tr.find('td').eq(1).find('span').eq(0).text().split(" ").join("").split("\n").join("");
         var timeSplit=text.split(':');
 
-        if(timeSplit[0]*60*60+timeSplit[1]*60+timeSplit[2]*1<3*60){
-            console.log("Completar Grátis");
-            countx++
-            let stringJSON = JSON.stringify(countx);
-            localStorage.setItem('Countx', stringJSON);
-            tr.find('td').eq(2).find('a').eq(2).click();
-
+        //if(timeSplit[0]*60*60+timeSplit[1]*60+timeSplit[2]*1<3*60-5){
+        if(document.querySelector('.btn-instant-free') != null){
+            if(document.querySelector('.btn-instant-free').style.display != 'none'){
+                if(document.querySelector('#loading_content').style.display == "none"){
+                    console.log("Completar Grátis");
+                    countx++
+                    let stringJSON = JSON.stringify(countx);
+                    localStorage.setItem('Countx', stringJSON);
+                    tr.find('td').eq(2).find('a').eq(2).click();
+                }else{
+                    console.log('Aguardando servidor.')
+                }
+            }
         }
+
+        //}
         //missao concluida
-        if(countx === 2){
-            if(document.querySelector('.quest-popup-container') === null){
-                document.querySelector('.statusLab').innerHTML = 'Recompença disponivel.';
-                Questlines.showDialog(0, 'main-tab')
-                countx = 0;
-                let stringJSON = JSON.stringify(countx);
-                localStorage.setItem('Countx', stringJSON);
+        if(desligarRecomp == false){
+            if(countx >= 4){
+                if(document.querySelector('.quest-popup-container') === null){
+                    document.querySelector('.statusLab').innerHTML = 'Recompença disponivel.';
+                    Questlines.showDialog(0, 'main-tab')
+                    countx = 0;
+                    let stringJSON = JSON.stringify(countx);
+                    localStorage.setItem('Countx', stringJSON);
+                }
             }
         }
         if(document.querySelector('.quest-popup-container') !== null){
@@ -211,26 +226,28 @@ function Secundario(){
     },300);
 }
 async function teste(){
-    if(document.querySelector('.quest-popup-container') !== null){
-        await loading();
-        while(document.querySelectorAll('.reward-system-claim-button').length !== 0){
-            for(let btn of document.querySelectorAll('.reward-system-claim-button')){
-                console.log('Pegando Recompenças Em ',btn)
-                document.querySelector('.statusLab').innerHTML = 'Pegando recompença.';
-                recomp++
-                let stringJSON = JSON.stringify(recomp);
-                localStorage.setItem('Recomp', stringJSON);
-                document.querySelector('.recompD').innerHTML = `<h5>${recomp}</h5>`;
-                btn.click();
-                await loading();
-                await delayS(100)
+    if(desligarRecomp == false){
+        if(document.querySelector('.quest-popup-container') !== null){
+            await loading();
+            while(document.querySelectorAll('.reward-system-claim-button').length !== 0){
+                for(let btn of document.querySelectorAll('.reward-system-claim-button')){
+                    console.log('Pegando Recompenças Em ',btn)
+                    document.querySelector('.statusLab').innerHTML = 'Pegando recompença.';
+                    recomp++
+                    let stringJSON = JSON.stringify(recomp);
+                    localStorage.setItem('Recomp', stringJSON);
+                    document.querySelector('.recompD').innerHTML = `<h5>${recomp}</h5>`;
+                    btn.click();
+                    await loading();
+                    await delayS(100)
+                }
             }
-        }
-        if(document.querySelectorAll('.reward-system-claim-button').length === 0){
-            if(document.querySelector('.popup_box_close') !== null){
-                document.querySelector('.popup_box_close').click();
+            if(document.querySelectorAll('.reward-system-claim-button').length === 0){
+                if(document.querySelector('.popup_box_close') !== null){
+                    document.querySelector('.popup_box_close').click();
+                }
+                variavel = true;
             }
-            variavel = true;
         }
     }
 }
@@ -293,8 +310,8 @@ async function verifQuest(){
                         let stringJSON = JSON.stringify(recomp);
                         localStorage.setItem('Recomp', stringJSON);
                         document.querySelector('.recompD').innerHTML = `<h5>${recomp}</h5>`;
-                        //await delayS(500)
-                        //Questlines.showDialog(0, 'main-tab')
+                        await delayS(500)
+                        Questlines.showDialog(0, 'main-tab')
                         variavel = true;
                         return;
 
@@ -305,8 +322,8 @@ async function verifQuest(){
                             document.querySelector('[class="skip-btn btn"]').click();
                             await loading();
                             document.querySelector('.statusLab').innerHTML = 'Pulando quest desnecessaria.';
-                            //await delayS(500)
-                            //Questlines.showDialog(0, 'main-tab')
+                            await delayS(500)
+                            Questlines.showDialog(0, 'main-tab')
                             variavel = true;
                             return;
 
@@ -367,10 +384,25 @@ function getEvoluir_vilas(){
 
 function Proxima_Construção(){
     let Construção_proximo_edificio = getConstrução_proximo_edificio();
-    if (Construção_proximo_edificio !== undefined){
-        Construção_proximo_edificio.click();
-        console.log("Clicked on " + Construção_proximo_edificio);
+    if(document.querySelector('#loading_content').style.display == "none"){
+        if (Construção_proximo_edificio !== undefined){
+            if(document.querySelector('.error') === null){
+                if(document.querySelector('#loading_content').style.display == "none"){
+                    console.log(countx + "Clicked on " + Construção_proximo_edificio);
+                    Construção_proximo_edificio.click();
+                    countx++
+                }else{
+                console.log("Aguardando servidor.")
+                }
+            }else{
+                attualiz()
+            }
+
+        }
+    }else{
+        console.log('Aguardando... Ms:' + Timing.offset_to_server);
     }
+
 }
 
 function getConstrução_proximo_edificio() {
@@ -383,8 +415,16 @@ function getConstrução_proximo_edificio() {
         if (Clicar_Upar_Edificos.hasOwnProperty(proximo)){
             let próximo_edifício = document.getElementById(proximo);
             var Visivel = próximo_edifício.offsetWidth > 0 || próximo_edifício.offsetHeight > 0;
+            let farm;
+            for(let i = 0; i<=30; i++){
+                if(document.getElementById(`main_buildlink_farm_${i}`) !== null){
+                    farm = document.getElementById(`main_buildlink_farm_${i}`)
+                }
+            }
             if (Visivel){
                 instituir = próximo_edifício;
+            }else if(farm.offsetWidth > 0 || farm.offsetHeight > 0){
+                instituir = farm;
             }
             if (Construção_Edificios_Ordem){
                 break;
@@ -412,67 +452,55 @@ function getConstrução_Edifcios_Serie() {
     Sequência_Construção.push("main_buildlink_stone_2");
     // Construção Edificio Principal 2
     Sequência_Construção.push("main_buildlink_main_2");
-    // Construção Edificio Principal 3
-    Sequência_Construção.push("main_buildlink_main_3");
-    // Construção Quartel 1
-    Sequência_Construção.push("main_buildlink_barracks_1");
     // Construção Madeira 3
     Sequência_Construção.push("main_buildlink_wood_3");
     // Construção Argila 3
     Sequência_Construção.push("main_buildlink_stone_3");
-    // Construção Quartel 2
-    Sequência_Construção.push("main_buildlink_barracks_2");
-
-//------------- Atacar Aldeia Barbara ------------------//
-
-    // Construção Armazém 2
+    // Construção Edificio Principal 3
+    Sequência_Construção.push("main_buildlink_main_3");
+    // Construção Quartel 1
+    Sequência_Construção.push("main_buildlink_barracks_1");
     Sequência_Construção.push("main_buildlink_storage_2");
+    Sequência_Construção.push("main_buildlink_farm_2");
+    Sequência_Construção.push("main_buildlink_storage_3");
+    // Construção Madeira 4
+    Sequência_Construção.push("main_buildlink_wood_4");
+    // Construção Argila 4
+    Sequência_Construção.push("main_buildlink_stone_4");
     // Construção Ferro 2
     Sequência_Construção.push("main_buildlink_iron_2");
-    // Construção Armazém 3
-    Sequência_Construção.push("main_buildlink_storage_3");
-    // Construção Armazém 4
-    Sequência_Construção.push("main_buildlink_storage_4");
-    // Construção Armazém 5
-    Sequência_Construção.push("main_buildlink_storage_5");
-    // Construção Armazém 6
-    Sequência_Construção.push("main_buildlink_storage_6");
-
-//---------------- Recrutar Lanceiro -----------------//
-
-    // Construção Quartel 3
-    Sequência_Construção.push("main_buildlink_barracks_3");
-    // Construção Estatua 1
-    Sequência_Construção.push("main_buildlink_statue_1");
-    // Construção Fazenda 2
-    Sequência_Construção.push("main_buildlink_farm_2");
     // Construção Ferro 3
     Sequência_Construção.push("main_buildlink_iron_3");
+     // Construção Madeira 5
+    Sequência_Construção.push("main_buildlink_wood_5");
+    // Construção Argila 5
+    Sequência_Construção.push("main_buildlink_stone_5");
     // Construção Edificio Principal 4
     Sequência_Construção.push("main_buildlink_main_4");
     // Construção Edificio Principal 5
     Sequência_Construção.push("main_buildlink_main_5");
     // Construção Ferreiro 1
     Sequência_Construção.push("main_buildlink_smith_1");
-    // Construção Madeira 4
-    Sequência_Construção.push("main_buildlink_wood_4");
-    // Construção Argila 4
-    Sequência_Construção.push("main_buildlink_stone_4");
-
-    //---------------- Recrutar Paladino - Escolher Bandeira -  -----------------//
-
     // Construção Muralha 1
     Sequência_Construção.push("main_buildlink_wall_1");
+    // Construção Mercado 1
+    Sequência_Construção.push("main_buildlink_market_1");
+    // Construção Armazém 4
+    Sequência_Construção.push("main_buildlink_storage_4");
+    // Construção Armazém 5
+    Sequência_Construção.push("main_buildlink_storage_5");
+    // Construção Armazém 6
+    Sequência_Construção.push("main_buildlink_storage_6");
+    // Construção Quartel 3
+    Sequência_Construção.push("main_buildlink_barracks_2");
+    // Construção Quartel 3
+    Sequência_Construção.push("main_buildlink_barracks_3");
+    // Construção Estatua 1
+    Sequência_Construção.push("main_buildlink_statue_1");
     // Construção Esconderijo 2
     Sequência_Construção.push("main_buildlink_hide_2");
     // Construção Esconderijo 3
     Sequência_Construção.push("main_buildlink_hide_3");
-     // Construção Madeira 5
-    Sequência_Construção.push("main_buildlink_wood_5");
-    // Construção Argila 5
-    Sequência_Construção.push("main_buildlink_stone_5");
-    // Construção Mercado 1
-    Sequência_Construção.push("main_buildlink_market_1");
     // Construção Madeira 6
     Sequência_Construção.push("main_buildlink_wood_6");
     // Construção Argila 6
