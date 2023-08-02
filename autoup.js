@@ -151,7 +151,7 @@ function executarEtapa1(){
                                 }
                             }*/
                         }
-                        if(i.offsetWidth > 0 || i.offsetHeight > 0 && $('#buildqueue').find('b').length === 0){
+                        if(i.offsetWidth > 0 && i.offsetHeight > 0 && $('#buildqueue').find('b').length === 0){
                             console.log('Upando Quests');
                             document.querySelector('.statusLab').innerHTML = 'Upando quests.';
                             i.click();
