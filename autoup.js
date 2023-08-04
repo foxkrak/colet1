@@ -30,7 +30,6 @@ let prox;
 let qualquer = false;
 let id = game_data.village.id
 let mundo = game_data.world
-farmgodFox;
 
 // Escolha se você deseja que o bot enfileire os edifícios na ordem definida (= true) ou
 // assim que um prédio estiver disponível para a fila de construção (= false)
@@ -49,16 +48,17 @@ function aleatorio(superior,inferior) {
     let aleat = Math.random() * numPosibilidades
     return Math.round(parseInt(inferior) + aleat)
 }
-if(farmgodFox == null || farmgodFox == undefined){
-      farmgodFox = false;
-      console.log(farmgodFox)
+try{
+      if(farmgodFox){
+            let mudar = aleatorio(2160000,7200000);
+            console.log('Vai farmar em: '+ Math.round((mudar/1000)/60) + ' minutos.')
+            setTimeout(()=>{
+                  window.location.href = `https://${mundo}.tribalwars.com.br/game.php?village=${id}&screen=am_farm`
+            },mudar) 
+      }
 }
-if(farmgodFox){
-      let mudar = aleatorio(2160000,7200000);
-      console.log('Vai farmar em: '+ Math.round((mudar/1000)/60) + ' minutos.')
-      setTimeout(()=>{
-            window.location.href = `https://${mundo}.tribalwars.com.br/game.php?village=${id}&screen=am_farm`
-      },mudar) 
+catch{
+      console.log('FarmGod, Inexistente!')
 }
 
 
