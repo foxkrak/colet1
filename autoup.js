@@ -50,6 +50,7 @@ function aleatorio(superior,inferior) {
 }
 if(farmgodFox == null || farmgodFox == undefined){
       farmgodFox = false;
+      console.log(farmgodFox)
 }
 if(farmgodFox){
       let mudar = aleatorio(2160000,7200000);
