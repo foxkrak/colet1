@@ -30,7 +30,6 @@ let prox;
 let qualquer = false;
 let id = game_data.village.id
 let mundo = game_data.world
-let farmgodFox;
 
 // Escolha se você deseja que o bot enfileire os edifícios na ordem definida (= true) ou
 // assim que um prédio estiver disponível para a fila de construção (= false)
