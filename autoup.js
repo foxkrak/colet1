@@ -28,6 +28,8 @@ let pontosC;
 let countx;
 let prox;
 let qualquer = false;
+let id = game_data.village.id
+let mundo = game_data.world
 
 // Escolha se você deseja que o bot enfileire os edifícios na ordem definida (= true) ou
 // assim que um prédio estiver disponível para a fila de construção (= false)
@@ -36,6 +38,21 @@ let Construção_Edificios_Quest;
 let botao;
 let botao2;
 let variavel = true;
+
+function attualiz() {
+    location.reload(true);
+}
+
+function aleatorio(superior,inferior) {
+    let numPosibilidades = superior - inferior
+    let aleat = Math.random() * numPosibilidades
+    return Math.round(parseInt(inferior) + aleat)
+}
+let mudar = aleatorio(2160000,7200000);
+console.log('Vai farmar em: '+ Math.round((mudar/1000)/60) + ' minutos.')
+setTimeout(()=>{
+window.location.href = `https://${mundo}.tribalwars.com.br/game.php?village=${id}&screen=am_farm`
+},mudar)
 
 function attualiz() {
     location.reload(true);
