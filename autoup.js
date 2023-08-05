@@ -98,12 +98,15 @@ try{
                               window.location.href = `https://${mundo}.tribalwars.com.br/game.php?village=${id}&screen=am_farm`
                         },mudar) 
                   }{
+                        tempoFarmgod = 'FarmGod OFF'
                         console.log('FarmGod Desativado.')
                   }
             }else{
+                  tempoFarmgod = 'Not FarmAssist'
                   console.log('Nao tem Farm Assitente.')
             }
       }else{
+            tempoFarmgod = 'Not Premium'
             console.log('Nao tem Premium.')
       }
 }
