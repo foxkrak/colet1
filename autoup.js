@@ -1272,7 +1272,7 @@ function html(){
 
 function createEle(ele,texto = '',clas,titulo){
     let EleCriado = document.createElement(ele);
-    EleCriado.innerText = texto;
+    EleCriado.innerHTML = texto;
     if(clas !== undefined) EleCriado.classList = clas;
     if(titulo !== undefined) EleCriado.title = titulo
     return EleCriado;
