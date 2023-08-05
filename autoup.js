@@ -1220,7 +1220,7 @@ let htm = `<div class="popup_box show" id="popup_box_twcheese-scavenge-preferenc
         </div></div></div><div class="fader"></div>`
 
 
-document.querySelector('.donate').addEventListener('click',function(){
+document.querySelector('.donate1').addEventListener('click',function(){
     document.querySelector('#ds_body').appendChild(createEle('div',htm,'popup_box_container'))
     createClose();
 })
@@ -1261,7 +1261,7 @@ function html(){
     <button class="questBtn btn" title="Priorizar Quest: Desligado.">Não</button>
     <br><br>
     <span style="float: right; font-size: xx-small; font-weight: normal;">Updated by WFox: v1.2</span>
-    <span style="float: left; font-size: xx-small; font-weight: normal;"><a href="#" class="donate">Donate</a></span>
+    <span style="float: left; font-size: xx-small; font-weight: normal;"><a href="#" class="donate1">Donate</a></span>
 </td>
             </tr>
           </tbody></table>
