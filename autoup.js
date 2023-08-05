@@ -51,8 +51,8 @@ function aleatorio(superior,inferior) {
 }
 
 function tempoFarm(mudar){
+      let ss = mudar/1000
       setInterval(()=>{
-            let ss = mudar/1000
             ss--
             tempoFarmgod = tempoF(ss*1000)
       },1000)
