@@ -32,7 +32,7 @@ let id = game_data.village.id
 let mundo = game_data.world
 let tempoFarmgod;
 let farmassist = game_data.features.FarmAssistent.active;
-let premium = game_data.features.Premium.active;
+let premi = game_data.features.Premium.active;
 
 // Escolha se você deseja que o bot enfileire os edifícios na ordem definida (= true) ou
 // assim que um prédio estiver disponível para a fila de construção (= false)
@@ -87,7 +87,7 @@ function tempoF(datair){
 }
 
 try{
-      if(premium){
+      if(premi){
             if(farmassist){
                   if(farmgodFox){
                         let mudar = aleatorio(min*60*1000,max*60*1000);
