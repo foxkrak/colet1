@@ -41,31 +41,6 @@ function inicarTimer(){
 }
 
 //*************************** CRIANDO OS ELEMENTOS CONFIGURANDO E DANDO FUNÇÃO ***************************
-
-//-------------------------------------------Donate
-
-let htm = `<div class="popup_box show" id="popup_box_twcheese-scavenge-preferences-popup" style="width: 366px;">
-    <a class="popup_box_close tooltip-delayed" href="#" data-title="Fechado :: atalho de teclado: <b>Esc</b>">&nbsp;</a>
-    <div class="popup_box_content">
-        <div class="qrcode">
-            <h3>Donate - Pix</h3>
-            <img src="https://i.ibb.co/KDSHfm7/image.png" width="366" heigth="366">
-        </div></div></div><div class="fader"></div>`
-
-
-document.querySelector('.donate').addEventListener('click',function(){
-    document.querySelector('#ds_body').appendChild(createEle('div',htm,'popup_box_container'))
-    createClose();
-})
-
-function createClose(){
-    document.querySelector('.popup_box_close').addEventListener('click',function(){
-        document.querySelector('.popup_box_container').remove();
-    })
-}
-
-//---------------------------------------------------
-
 function html(){
     let html = `<td class="opcoestd content-border border-frame-gold-red" style="margin-top: 200px; position: absolute;">
       <table class="vis">
@@ -110,6 +85,30 @@ function html(){
 document.querySelector('.shadedBG').appendChild(createEle('td',undefined,'opcoestd content-border border-frame-gold-red'))
 document.querySelector('.opcoestd').innerHTML = html();
 document.querySelector('.opcoestd').style.cssText = 'margin-top: 200px;'+'position: absolute;'
+
+//-------------------------------------------Donate
+
+let htm = `<div class="popup_box show" id="popup_box_twcheese-scavenge-preferences-popup" style="width: 366px;">
+    <a class="popup_box_close tooltip-delayed" href="#" data-title="Fechado :: atalho de teclado: <b>Esc</b>">&nbsp;</a>
+    <div class="popup_box_content">
+        <div class="qrcode">
+            <h3>Donate - Pix</h3>
+            <img src="https://i.ibb.co/KDSHfm7/image.png" width="366" heigth="366">
+        </div></div></div><div class="fader"></div>`
+
+
+document.querySelector('.donate').addEventListener('click',function(){
+    document.querySelector('#ds_body').appendChild(createEle('div',htm,'popup_box_container'))
+    createClose();
+})
+
+function createClose(){
+    document.querySelector('.popup_box_close').addEventListener('click',function(){
+        document.querySelector('.popup_box_container').remove();
+    })
+}
+
+//---------------------------------------------------
 
 function createEle(ele,texto = '',clas){
     let EleCriado = document.createElement(ele);
