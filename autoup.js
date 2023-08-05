@@ -31,6 +31,8 @@ let qualquer = false;
 let id = game_data.village.id
 let mundo = game_data.world
 let tempoFarmgod;
+let farmassist = game_data.features.FarmAssistent.active;
+let premium = game_data.features.Premium.active;
 
 // Escolha se você deseja que o bot enfileire os edifícios na ordem definida (= true) ou
 // assim que um prédio estiver disponível para a fila de construção (= false)
@@ -85,14 +87,24 @@ function tempoF(datair){
 }
 
 try{
-      if(farmgodFox){
-            let mudar = aleatorio(min*60*1000,max*60*1000);
-            tempoFarmgod = tempoF(mudar)
-            tempoFarm(mudar);
-            console.log('Vai farmar em: '+ Math.round((mudar/1000)/60) + ' minutos.')
-            setTimeout(()=>{
-                  window.location.href = `https://${mundo}.tribalwars.com.br/game.php?village=${id}&screen=am_farm`
-            },mudar) 
+      if(premium){
+            if(farmassist){
+                  if(farmgodFox){
+                        let mudar = aleatorio(min*60*1000,max*60*1000);
+                        tempoFarmgod = tempoF(mudar)
+                        tempoFarm(mudar);
+                        console.log('Vai farmar em: '+ Math.round((mudar/1000)/60) + ' minutos.')
+                        setTimeout(()=>{
+                              window.location.href = `https://${mundo}.tribalwars.com.br/game.php?village=${id}&screen=am_farm`
+                        },mudar) 
+                  }{
+                        console.log('FarmGod Desativado.')
+                  }
+            }else{
+                  console.log('Nao tem Farm Assitente.')
+            }
+      }else{
+            console.log('Nao tem Premium.')
       }
 }
 catch{
