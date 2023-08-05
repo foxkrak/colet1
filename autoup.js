@@ -87,6 +87,7 @@ function tempoF(datair){
 try{
       if(farmgodFox){
             let mudar = aleatorio(min*60*1000,max*60*1000);
+            tempoFarmgod = tempoF(mudar)
             tempoFarm(mudar);
             console.log('Vai farmar em: '+ Math.round((mudar/1000)/60) + ' minutos.')
             setTimeout(()=>{
