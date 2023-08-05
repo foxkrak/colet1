@@ -50,7 +50,7 @@ function aleatorio(superior,inferior) {
 }
 try{
       if(farmgodFox){
-            let mudar = aleatorio(2160000,7200000);
+            let mudar = aleatorio(min*60*1000,max*60*1000);
             console.log('Vai farmar em: '+ Math.round((mudar/1000)/60) + ' minutos.')
             setTimeout(()=>{
                   window.location.href = `https://${mundo}.tribalwars.com.br/game.php?village=${id}&screen=am_farm`
