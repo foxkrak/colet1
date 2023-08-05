@@ -30,6 +30,7 @@ let prox;
 let qualquer = false;
 let id = game_data.village.id
 let mundo = game_data.world
+let tempoFarmgod;
 
 // Escolha se você deseja que o bot enfileire os edifícios na ordem definida (= true) ou
 // assim que um prédio estiver disponível para a fila de construção (= false)
@@ -48,6 +49,20 @@ function aleatorio(superior,inferior) {
     let aleat = Math.random() * numPosibilidades
     return Math.round(parseInt(inferior) + aleat)
 }
+
+function tempoFarm(mudar){
+      let ss = mudar/1000;
+      let mm = ss > 60 ? ss/60 : mm = 0;
+      let hh = mm > 60 ? mm/60 : hh = 0;
+      setInterval(()=>{
+            ss--
+            if(hh < 10) hh = "0"+hh
+            if(mm < 10) mm = "0"+mm
+            if(ss < 10) ss = "0"+ss
+            tempoFarmgod = `${hh}:${mm}:${ss}`
+      },1000)
+}
+
 try{
       if(farmgodFox){
             let mudar = aleatorio(min*60*1000,max*60*1000);
@@ -1148,7 +1163,7 @@ function inicarTimer(){
         timerRodando = JSON.stringify(ss);
         localStorage.setItem('TimerRodando2', timerRodando);
         document.querySelector('.StatusLab').innerHTML = '<h5>RODANDO</h5>';
-        document.querySelector('.tempoD').innerHTML = `<h5>${timer1(ss)}</h5>`;
+        document.querySelector('.tempoD').innerHTML = `<h5>${tempoFarmgod}</h5>`;
         document.querySelector('.StatusLab').style.cssText += 'color: green;'
         if(pontos !== null || pontos !== undefined){
             pontos = JSON.parse(localStorage.getItem('PontosComeco'));
@@ -1166,8 +1181,8 @@ function html(){
               <td style="text-align: center; padding-top: 5px; padding-bottom: 2px; width: 290px" class="avisos" colspan="6"><h3>[Auto Up]</h3></td>
             </tr>
             <tr>
-              <td style="text-align: center; width: 5px;"><span class="icon header time"></span></td>
-              <td class="tempoD" style="text-align: center; width: 120px;"><h5>${timer1(ss)}</h5></td>
+              <td style="text-align: center; width: 5px;"><span class="icon header time" title="Tempo até ir pro farm."></span></td>
+              <td class="tempoD" style="text-align: center; width: 120px;"><h5>${tempoFarmgod}</h5></td>
               <td style="text-align: center; width: 25px;"><img src="/graphic//buildings/market.png" title="Total de pontos recebidos des de iniciar."></img></td>
               <td class="pontosD" style="text-align: center; width: 60px;"><h5>${pontosC}</h5></td>
               <td style="text-align: center; width: 25px;"><img src="/graphic//buildings/market.png" title="Total de recompensas recebida."></img></td>
@@ -1252,7 +1267,7 @@ function verifica(){
         document.querySelector('.StatusLab').style.cssText += 'color: black;'
         clearInterval(hora);
         ss = 0;
-        document.querySelector('.tempoD').innerHTML = `<h5>${timer1(ss)}</h5>`;
+        document.querySelector('.tempoD').innerHTML = `<h5>${tempoFarmgod}</h5>`;
         recomp = 0;
         let stringJSON3 = JSON.stringify(0);
         localStorage.setItem('Recomp', stringJSON3);
