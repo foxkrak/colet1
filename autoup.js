@@ -97,7 +97,7 @@ try{
                         setTimeout(()=>{
                               window.location.href = `https://${mundo}.tribalwars.com.br/game.php?village=${id}&screen=am_farm`
                         },mudar) 
-                  }{
+                  }else{
                         tempoFarmgod = 'FarmGod OFF'
                         console.log('FarmGod Desativado.')
                   }
