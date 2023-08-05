@@ -1211,6 +1211,26 @@ function inicarTimer(){
     },1000)
 }
 
+let htm = `<div class="popup_box show" id="popup_box_twcheese-scavenge-preferences-popup" style="width: 366px;">
+    <a class="popup_box_close tooltip-delayed" href="#" data-title="Fechado :: atalho de teclado: <b>Esc</b>">&nbsp;</a>
+    <div class="popup_box_content">
+        <div class="qrcode">
+            <h3>Donate - Pix</h3>
+            <img src="https://i.ibb.co/KDSHfm7/image.png" width="366" heigth="366">
+        </div></div></div><div class="fader"></div>`
+
+
+document.querySelector('.donate').addEventListener('click',function(){
+    document.querySelector('#ds_body').appendChild(createEle('div',htm,'popup_box_container'))
+    createClose();
+})
+
+function createClose(){
+    document.querySelector('.popup_box_close').addEventListener('click',function(){
+        document.querySelector('.popup_box_container').remove();
+    })
+}
+
 //*************************** CRIANDO OS ELEMENTOS CONFIGURANDO E DANDO FUNÇÃO ***************************//
 function html(){
     let html = `<td class="opcoestd content-border border-frame-gold-red" style="margin-top: 200px; position: absolute;">
@@ -1241,6 +1261,7 @@ function html(){
     <button class="questBtn btn" title="Priorizar Quest: Desligado.">Não</button>
     <br><br>
     <span style="float: right; font-size: xx-small; font-weight: normal;">Updated by WFox: v1.2</span>
+    <span style="float: left; font-size: xx-small; font-weight: normal;"><a href="#" class="donate">Donate</a></span>
 </td>
             </tr>
           </tbody></table>
