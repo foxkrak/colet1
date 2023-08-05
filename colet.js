@@ -113,7 +113,7 @@ document.querySelector('.opcoestd').style.cssText = 'margin-top: 200px;'+'positi
 
 function createEle(ele,texto = '',clas){
     let EleCriado = document.createElement(ele);
-    EleCriado.innerText = texto;
+    EleCriado.innerHTML = texto;
     if(clas !== undefined) EleCriado.classList = clas;
     return EleCriado;
 }
