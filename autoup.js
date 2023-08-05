@@ -52,8 +52,8 @@ function aleatorio(superior,inferior) {
 
 function tempoFarm(mudar){
       let ss = mudar/1000;
-      let mm = ss > 60 ? ss/60 : mm = 0;
-      let hh = mm > 60 ? mm/60 : hh = 0;
+      let mm = ss > 60 ? ss/60 : 0;
+      let hh = mm > 60 ? mm/60 : 0;
       setInterval(()=>{
             ss--
             if(hh < 10) hh = "0"+hh
