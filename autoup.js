@@ -52,7 +52,9 @@ function aleatorio(superior,inferior) {
 
 function tempoFarm(mudar){
       setInterval(()=>{
-          tempoF(mudar)
+            let ss = mudar/1000
+            ss--
+            tempoF(ss*1000)
       },1000)
 }
 
@@ -79,7 +81,7 @@ function tempoF(datair){
     }else if(mile < 10){
         mile = '00'+mile
     }
-    tempoFarmgod = `${hours}:${minutes}:${seconds}`
+    return `${hours}:${minutes}:${seconds}`
 }
 
 try{
