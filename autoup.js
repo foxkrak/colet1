@@ -51,16 +51,35 @@ function aleatorio(superior,inferior) {
 }
 
 function tempoFarm(mudar){
-      let ss = mudar/1000;
-      let mm = ss > 60 ? ss/60 : 0;
-      let hh = mm > 60 ? mm/60 : 0;
       setInterval(()=>{
-            ss--
-            if(hh < 10) hh = "0"+hh
-            if(mm < 10) mm = "0"+mm
-            if(ss < 10) ss = "0"+ss
-            tempoFarmgod = `${hh}:${mm}:${ss}`
+          tempoF(mudar)
       },1000)
+}
+
+function tempoF(datair){
+    var dead = new Date(datair).getTime();
+    var now = new Date(datair-datair).getTime();
+    var t = dead - now;
+    var days = Math.floor(t / (1000 * 60 * 60 * 24));
+    var hours = Math.floor((t%(1000 * 60 * 60 * 24))/(1000 * 60 * 60));
+    var minutes = Math.floor((t % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((t % (1000 * 60)) / 1000);
+    var mile = Math.floor(t%((1000*60)/60)/1)
+    if(hours < 10){
+        hours = '0'+hours
+    }
+    if(minutes < 10){
+        minutes = '0'+minutes
+    }
+    if(seconds < 10){
+        seconds = '0'+seconds
+    }
+    if(mile < 100 && mile > 10){
+        mile = '0'+mile
+    }else if(mile < 10){
+        mile = '00'+mile
+    }
+    tempoFarmgod = `${hours}:${minutes}:${seconds}`
 }
 
 try{
