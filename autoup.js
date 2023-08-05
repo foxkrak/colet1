@@ -54,7 +54,7 @@ function tempoFarm(mudar){
       setInterval(()=>{
             let ss = mudar/1000
             ss--
-            tempoF(ss*1000)
+            tempoFarmgod = tempoF(ss*1000)
       },1000)
 }
 
