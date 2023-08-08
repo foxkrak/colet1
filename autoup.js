@@ -1328,7 +1328,7 @@ function verifica3(){
             let stringJSON = JSON.stringify('Sim');
             localStorage.setItem('Farm', stringJSON);
             document.querySelector('.pararBtn').innerText = 'Sim'
-            document.querySelector('.pararBtn').title = 'Desativar Farm'
+            document.querySelector('.pararBtn').title = 'Farm Ativado'
             farmverify();
         }catch{
             console.log('Error: Variavel farmgodFox nao definida.')
@@ -1339,7 +1339,7 @@ function verifica3(){
             let stringJSON = JSON.stringify('Não');
             localStorage.setItem('Farm', stringJSON);
             document.querySelector('.pararBtn').innerText = 'Não'
-            document.querySelector('.pararBtn').title = 'Ativar Farm'
+            document.querySelector('.pararBtn').title = 'Farm Desativado'
             farmverify();
         }catch{
             console.log('Error: Variavel farmgodFox nao definida.')
