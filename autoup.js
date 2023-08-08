@@ -6,6 +6,20 @@ Logica inicial de Programação obtida, atraves de um tutorial
 https://forum.tribalwars.com.br/index.php?threads/os-5-primeiros-dias-modo-novato.334845/#post-3677800
 ##############################################*/
 
+let farmgodFox;
+let tempfarm;
+let minimocontrole;
+let maximocontrole;
+if(typeof min == 'undefined'){
+    minimocontrole = 30;
+}else{
+    minimocontrole = min;
+}
+if(typeof max == 'undefined'){
+    maximocontrole = 60;
+}else{
+    maximocontrole = max;
+}
 
 //*************************** CONFIGURAÇÃO ***************************//
 // Escolha Tempo de espera mínimo e máximo entre ações (em milissegundos)
@@ -40,6 +54,7 @@ let Construção_Edificios_Ordem = true;
 let Construção_Edificios_Quest;
 let botao;
 let botao2;
+let botao3;
 let variavel = true;
 
 function attualiz() {
@@ -54,7 +69,7 @@ function aleatorio(superior,inferior) {
 
 function tempoFarm(mudar){
       let ss = mudar/1000
-      setInterval(()=>{
+      tempfarm = setInterval(()=>{
             ss--
             tempoFarmgod = tempoF(ss*1000)
       },1000)
@@ -85,33 +100,35 @@ function tempoF(datair){
     }
     return `${hours}:${minutes}:${seconds}`
 }
-
-try{
-      if(premi){
+function farmverify(){
+    try{
+        if(premi){
             if(farmassist){
-                  if(farmgodFox){
-                        let mudar = aleatorio(min*60*1000,max*60*1000);
-                        tempoFarmgod = tempoF(mudar)
-                        tempoFarm(mudar);
-                        console.log('Vai farmar em: '+ Math.round((mudar/1000)/60) + ' minutos.')
-                        setTimeout(()=>{
-                              window.location.href = `https://${mundo}.tribalwars.com.br/game.php?village=${id}&screen=am_farm`
-                        },mudar) 
-                  }else{
-                        tempoFarmgod = 'FarmGod OFF'
-                        console.log('FarmGod Desativado.')
-                  }
+                if(farmgodFox){
+                    let mudar = aleatorio(minimocontrole*60*1000,maximocontrole*60*1000);
+                    tempoFarmgod = tempoF(mudar)
+                    tempoFarm(mudar);
+                    console.log('Vai farmar em: '+ Math.round((mudar/1000)/60) + ' minutos.')
+                    setTimeout(()=>{
+                        window.location.href = `https://${mundo}.tribalwars.com.br/game.php?village=${id}&screen=am_farm`
+                    },mudar)
+                }else{
+                    tempoFarmgod = 'FarmGod OFF'
+                    console.log('FarmGod Desativado.')
+                    clearInterval(tempfarm)
+                }
             }else{
-                  tempoFarmgod = 'Not FarmAssist'
-                  console.log('Nao tem Farm Assitente.')
+                tempoFarmgod = 'Not FarmAssist'
+                console.log('Nao tem Farm Assitente.')
             }
-      }else{
+        }else{
             tempoFarmgod = 'Not Premium'
             console.log('Nao tem Premium.')
-      }
-}
-catch{
-      console.log('FarmGod, Inexistente!')
+        }
+    }
+    catch(e){
+        console.log('FarmGod, Inexistente!',e)
+    }
 }
 
 
@@ -123,6 +140,7 @@ countx = JSON.parse(localStorage.getItem('Countx'));
 recomp = JSON.parse(localStorage.getItem('Recomp'));
 botao = JSON.parse(localStorage.getItem('Ordem'));
 botao2 = JSON.parse(localStorage.getItem('Quests'));
+botao3 = JSON.parse(localStorage.getItem('Farm'));
 
 if(countx === null || countx === undefined){
     let stringJSON = JSON.stringify(0);
@@ -1256,7 +1274,7 @@ function html(){
               <td style="text-align: center; padding: 10px;" colspan="6">
     <button class="iniciarBtn btn" style="margin-right: 10px;">Iniciar</button>
     <button class="pausarBtn btn" style="margin-right: 10px;">Pausar</button>
-    <button class="pararBtn btn" style="margin-right: 10px;">Parar</button>
+    <button class="pararBtn btn" style="margin-right: 10px;">Sim</button>
     <button class="ordemBtn btn" style="margin-right: 10px;">Sim</button>
     <button class="questBtn btn" title="Priorizar Quest: Desligado.">Não</button>
     <br><br>
@@ -1292,23 +1310,42 @@ document.querySelector('.pausarBtn').addEventListener('click',function(){
     verifica();
 })
 document.querySelector('.pararBtn').addEventListener('click',function(){
-    let stringJSON = JSON.stringify(3);
-    localStorage.setItem('Estado', stringJSON);
-    clearInterval(principal);
-    clearInterval(secundario);
-    pontos = parseInt(document.querySelector('#rank_points').innerHTML)
-    let stringJSON2 = JSON.stringify(pontos);
-    localStorage.setItem('PontosComeco', stringJSON2);
-    pontosC = parseInt(document.querySelector('#rank_points').innerHTML) - pontos
-    document.querySelector('.pontosD').innerHTML = `<h5>${pontosC}</h5>`;
-    verifica();
+    verifica3();
+    //window.location.reload();
 })
 document.querySelector('.ordemBtn').addEventListener('click',function(){
-        verifica1();
+    verifica1();
 })
 document.querySelector('.questBtn').addEventListener('click',function(){
-        verifica2();
+    verifica2();
 })
+
+function verifica3(){
+    botao3 = JSON.parse(localStorage.getItem('Farm'));
+    if(botao3 === 'Não'){
+        try{
+            farmgodFox = true;
+            let stringJSON = JSON.stringify('Sim');
+            localStorage.setItem('Farm', stringJSON);
+            document.querySelector('.pararBtn').innerText = 'Sim'
+            document.querySelector('.pararBtn').title = 'Desativar Farm'
+            farmverify();
+        }catch{
+            console.log('Error: Variavel farmgodFox nao definida.')
+        }
+    }else{
+        try{
+            farmgodFox = false;
+            let stringJSON = JSON.stringify('Não');
+            localStorage.setItem('Farm', stringJSON);
+            document.querySelector('.pararBtn').innerText = 'Não'
+            document.querySelector('.pararBtn').title = 'Ativar Farm'
+            farmverify();
+        }catch{
+            console.log('Error: Variavel farmgodFox nao definida.')
+        }
+    }
+}
 
 function verifica(){
     if(localStorage.getItem('Estado') === '1'){
@@ -1321,16 +1358,6 @@ function verifica(){
         document.querySelector('.StatusLab').innerHTML = '<h5>PAUSADO</h5>';
         document.querySelector('.StatusLab').style.cssText += 'color: red;'
         clearInterval(hora);
-    }else{
-        document.querySelector('.StatusLab').innerHTML = '<h5>PARADO</h5>';
-        document.querySelector('.StatusLab').style.cssText += 'color: black;'
-        clearInterval(hora);
-        ss = 0;
-        document.querySelector('.tempoD').innerHTML = `<h5>${tempoFarmgod}</h5>`;
-        recomp = 0;
-        let stringJSON3 = JSON.stringify(0);
-        localStorage.setItem('Recomp', stringJSON3);
-        document.querySelector('.recompD').innerHTML = `<h5>${recomp}</h5>`;
     }
 }
 if(botao === undefined || botao === null || botao === 'Sim'){
@@ -1354,6 +1381,38 @@ if(botao2 === undefined || botao2 === null){
     Construção_Edificios_Quest = true;
     document.querySelector('.questBtn').innerText = 'Sim'
     document.querySelector('.questBtn').title = 'Priorizar Quest: Ligado.'
+}
+if(botao3 === undefined || botao3 === null){
+    try{
+        farmgodFox = true;
+        let stringJSON = JSON.stringify('Sim');
+        localStorage.setItem('Farm', stringJSON);
+        document.querySelector('.pararBtn').innerText = 'Sim'
+        document.querySelector('.pararBtn').title = 'Farm Ativado'
+        farmverify();
+    }catch{
+        console.log('Error: Variavel farmgodFox nao definida.')
+    }
+}else if(botao3 === 'Não'){
+    try{
+        farmgodFox = false;
+        document.querySelector('.pararBtn').innerText = 'Não'
+        document.querySelector('.pararBtn').title = 'Farm Desativado'
+        farmverify();
+    }catch{
+        console.log('Error: Variavel farmgodFox nao definida.')
+    }
+}else if(botao3 === 'Sim'){
+    try{
+        farmgodFox = true;
+        let stringJSON = JSON.stringify('Sim');
+        localStorage.setItem('Farm', stringJSON);
+        document.querySelector('.pararBtn').innerText = 'Sim'
+        document.querySelector('.pararBtn').title = 'Farm Ativado'
+        farmverify();
+    }catch{
+        console.log('Error: Variavel farmgodFox nao definida.')
+    }
 }
 verifica();
 
