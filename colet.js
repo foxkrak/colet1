@@ -105,9 +105,9 @@ async function start(){
 }
 function mediageral(){
     const maiortemp = Math.max(arr[0].tempo,arr[1].tempo,arr[2].tempo,arr[3].tempo);
-    const qtx = Math.floor(86400/maiortemp)
+    const qtx = Math.round(86400/maiortemp)
     const totalres = arr[0].res + arr[1].res + arr[2].res + arr[3].res
-    const mediag = totalres * qtx
+    const mediag = Math.round(totalres * qtx)
     const stringJSONip = JSON.stringify(mediag);
     localStorage.setItem(`Media-${game_data.village.id}`, stringJSONip);
     document.querySelector('.media').innerText = mediag.toLocaleString('pt-BR');
