@@ -108,6 +108,7 @@ function mediageral(){
     const qtx = Math.round(86400/maiortemp)
     const totalres = arr[0].res + arr[1].res + arr[2].res + arr[3].res
     const mediag = totalres * qtx
+    console.log(mediag +' ---- '+ totalres * qtx)
     const stringJSONip = JSON.stringify(mediag);
     localStorage.setItem(`Media-${game_data.village.id}`, stringJSONip);
     document.querySelector('.media').innerText = mediag.toLocaleString('pt-BR');
