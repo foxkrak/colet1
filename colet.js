@@ -67,7 +67,7 @@ function createEle(ele,texto = '',clas,id){
 function media(i){
     return new Promise((resolve) => {
         let arr = document.querySelectorAll('.duration')[i].innerText.split(':')
-        let res = Number(document.querySelectorAll('.wood-value')[i].innerText)+Number(document.querySelectorAll('.stone-value')[i].innerText)+Number(document.querySelectorAll('.iron-value')[i].innerText)
+        let res = Number(document.querySelectorAll('.wood-value')[i].innerText.replace('.',''))+Number(document.querySelectorAll('.stone-value')[i].innerText.replace('.',''))+Number(document.querySelectorAll('.iron-value')[i].innerText.replace('.',''))
         let h = Number(arr[0])*60*60;
         let m = Number(arr[1])*60;
         let s = Number(arr[2]);
