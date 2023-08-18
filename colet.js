@@ -104,15 +104,17 @@ async function start(){
         }
 }
 function mediageral(){
-    const maiortemp = Math.max(arr[0].tempo,arr[1].tempo,arr[2].tempo,arr[3].tempo);
-    const qtx = Math.round(86400/maiortemp)
-    const totalres = arr[0].res + arr[1].res + arr[2].res + arr[3].res
-    const mediag = totalres * qtx
-    console.log(mediag +' ---- '+ totalres * qtx)
-    const stringJSONip = JSON.stringify(mediag);
-    localStorage.setItem(`Media-${game_data.village.id}`, stringJSONip);
-    document.querySelector('.media').innerText = mediag.toLocaleString('pt-BR');
-    clearInterval(intervalo);
+    if(arr[0].res != 0 && arr[1].res != 0 && arr[2].res != 0 && arr[3].res != 0){
+        const maiortemp = Math.max(arr[0].tempo,arr[1].tempo,arr[2].tempo,arr[3].tempo);
+        const qtx = Math.round(86400/maiortemp)
+        const totalres = arr[0].res + arr[1].res + arr[2].res + arr[3].res
+        const mediag = totalres * qtx
+        const stringJSONip = JSON.stringify(mediag);
+        console.log(mediag +' ---- '+ totalres * qtx)
+        localStorage.setItem(`Media-${game_data.village.id}`, stringJSONip);
+        document.querySelector('.media').innerText = mediag.toLocaleString('pt-BR');
+        clearInterval(intervalo);
+    }
 }
 
 document.querySelector('.iniciar').addEventListener('click',function(){
