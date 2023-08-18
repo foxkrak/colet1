@@ -104,7 +104,7 @@ async function start(){
         }
 }
 function mediageral(){
-    if(arr[0].res != 0 && arr[1].res != 0 && arr[2].res != 0 && arr[3].res != 0){
+    if(arr[0].res != 0 || arr[1].res != 0 || arr[2].res != 0 || arr[3].res != 0){
         const maiortemp = Math.max(arr[0].tempo,arr[1].tempo,arr[2].tempo,arr[3].tempo);
         const qtx = Math.round(86400/maiortemp)
         const totalres = arr[0].res + arr[1].res + arr[2].res + arr[3].res
