@@ -29,6 +29,35 @@ document.querySelector('#colets').style.cssText = `margin-top: 200px; position: 
 $('.iniciar').prop('disabled',true);
 $('.parar').prop('disabled',true);
 
+try{
+    //-------------------------------------------Donate
+
+    let htm = `<div class="popup_box show" id="popup_box_twcheese-scavenge-preferences-popup" style="width: 366px;">
+                                <a class="popup_box_close tooltip-delayed" href="#" data-title="Fechado :: atalho de teclado: <b>Esc</b>">&nbsp;</a>
+                                <div class="popup_box_content">
+                                    <div class="qrcode">
+                                        <h3>Donate - Pix</h3>
+                                        <img src="https://i.ibb.co/KDSHfm7/image.png" width="366" heigth="366">
+                                    </div></div></div><div class="fader"></div>`
+
+
+    document.querySelector('.donate').addEventListener('click',function(){
+        document.querySelector('#ds_body').appendChild(createEle('div',htm,'popup_box_container'))
+        createClose();
+    })
+
+    function createClose(){
+        document.querySelector('.popup_box_close').addEventListener('click',function(){
+            document.querySelector('.popup_box_container').remove();
+        })
+    }
+
+    //---------------------------------------------------
+}
+catch(e){
+    console.log("Error Donate ",e)
+}
+
 if(JSON.parse(localStorage.getItem(`Media-${game_data.village.id}`)) != null){
     let media = JSON.parse(localStorage.getItem(`Media-${game_data.village.id}`))
     document.querySelector('.media').innerText = media.toLocaleString('pt-BR');
