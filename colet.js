@@ -1,6 +1,7 @@
+let aldeias = [];
+let loop = false;
 let it = true;
 let ligado = false;
-let intervalo;
 let entrou = false;
 let arr = [{res:0,tempo:0},{res:0,tempo:0},{res:0,tempo:0},{res:0,tempo:0}];
 let html = `
@@ -58,10 +59,36 @@ catch(e){
     console.log("Error Donate ",e)
 }
 
-if(JSON.parse(localStorage.getItem(`Media-${game_data.village.id}`)) != null){
+verificaAldeias();
+function verificaAldeias(){
+    let controleSoma = 0;
+    if(JSON.parse(localStorage.getItem('aldeiasColet')) != null){
+        aldeias = JSON.parse(localStorage.getItem('aldeiasColet'))
+        for(let all of aldeias){
+            controleSoma += all.mediares;
+            /*if(game_data.village.id == all.villageID){
+                document.querySelector('.media').innerText = all.mediares.toLocaleString('pt-BR');
+            }*/
+            if(Timing.getCurrentServerTime() >= all.tempo){
+                console.log(Timing.getCurrentServerTime()+" "+ all.tempo)
+                if(loop == false){
+                    if(window.location.href != window.location.origin + `/game.php?village=${all.villageID}&screen=place&mode=scavenge`){
+                        all.tempo = undefined;
+                        const stringJSONip = JSON.stringify(aldeias);
+                        localStorage.setItem(`aldeiasColet`, stringJSONip);
+                        window.location.href = window.location.origin + `/game.php?village=${all.villageID}&screen=place&mode=scavenge`;
+                    }
+                }
+            }
+        }
+        document.querySelector('.media').innerText = controleSoma.toLocaleString('pt-BR');
+    }
+}
+
+/*if(JSON.parse(localStorage.getItem(`Media-${game_data.village.id}`)) != null){
     let media = JSON.parse(localStorage.getItem(`Media-${game_data.village.id}`))
     document.querySelector('.media').innerText = media.toLocaleString('pt-BR');
-}
+}*/
 
 if(JSON.parse(localStorage.getItem('Ligado-Coleta')) != null){
     ligado = JSON.parse(localStorage.getItem('Ligado-Coleta'))
@@ -113,6 +140,7 @@ async function start(){
         if(document.querySelectorAll('.free_send_button').length == coletasdisponiveis){
             twcheese1();
             while(document.querySelectorAll('.free_send_button').length-1 >= 0){
+                loop = true;
                 const btn = document.querySelectorAll('.free_send_button').length-1
                 if(document.querySelector('#loading_content').style.display == 'none'){
                     if(document.querySelectorAll('.unitsInput')[0].value + document.querySelectorAll('.unitsInput')[1].value + document.querySelectorAll('.unitsInput')[2].value +
@@ -132,17 +160,38 @@ async function start(){
             console.log(arr)
         }
 }
-function mediageral(){
+function setararr(add,mediag,maiortemp){
+    return new Promise((resolve) => {
+        for(let all of aldeias){
+            if(game_data.village.id == all.villageID){
+                add = false;
+                all.mediares = mediag;
+                all.tempo = maiortemp;
+            }
+        }
+        if(add){
+            aldeias.push({
+                villageID: game_data.village.id,
+                mediares: mediag,
+                tempo: maiortemp,
+            })
+        }
+        resolve();
+    })
+}
+
+async function mediageral(){
+    let add = true;
     if(arr[0].res != 0 || arr[1].res != 0 || arr[2].res != 0 || arr[3].res != 0){
         const maiortemp = Math.max(arr[0].tempo,arr[1].tempo,arr[2].tempo,arr[3].tempo);
         const qtx = Math.round(86400/maiortemp)
         const totalres = arr[0].res + arr[1].res + arr[2].res + arr[3].res
         const mediag = totalres * qtx
-        const stringJSONip = JSON.stringify(mediag);
-        console.log(mediag +' ---- '+ totalres * qtx)
-        localStorage.setItem(`Media-${game_data.village.id}`, stringJSONip);
+        await setararr(add,mediag,Timing.getCurrentServerTime()+maiortemp*1000);
+        const stringJSONip = JSON.stringify(aldeias);
+        localStorage.setItem(`aldeiasColet`, stringJSONip);
+        loop = false;
         document.querySelector('.media').innerText = mediag.toLocaleString('pt-BR');
-        clearInterval(intervalo);
     }
 }
 
@@ -166,6 +215,7 @@ document.querySelector('.parar').addEventListener('click',function(){
 })
 
 setInterval(()=>{
+    verificaAldeias();
     if(ligado){
         $('.iniciar').prop('disabled',true);
         $('.parar').prop('disabled',false);
@@ -180,4 +230,4 @@ setInterval(()=>{
         $('.parar').prop('disabled',true);
         aviso();
     }
-},500)
+},1000)
