@@ -1,387 +1,183 @@
-var antes = Date.now();
-let teste = true;
-let hora;
-let intervalo = true;
-let RecursosColetados;
-let timerRodando;
-let format2;
-var total = 0;
-let ss = 0;
-let confbtn = false;
-let intervalo2;
-let start;
-let unii = 0;
-twcheese1();
-ss = JSON.parse(localStorage.getItem('TimerRodando'))
-total = JSON.parse(localStorage.getItem('TotalRecursoColetado'));
-format2 = (new Intl.NumberFormat('dec', { style: 'decimal' }).format(total));
-let totalDiv3 = Math.round(total / 3);
-let format3 = (new Intl.NumberFormat('dec', { style: 'decimal' }).format(totalDiv3));
+let it = true;
+let ligado = false;
+let intervalo;
+let entrou = false;
+let arr = [{res:0,tempo:0},{res:0,tempo:0},{res:0,tempo:0},{res:0,tempo:0}];
+let html = `
+<h4>Auto Coletar</h4>
+<table style="width: 100%">
+  <tbody style="text-align: center">
+    <tr>
+      <td class="avisos" colspan="2" style="padding: 7px; width: 200px; font-weight: bold;">Parado</td>
+    </tr>
+    <tr>
+    <td style="width: 90px">Média Diária:</td><td style="width: 80px"><span style="margin-right:5px; float: left;" class="total icon header ressources"></span><span class="media" style="font-weight: bold;">0</span></td>
+    </tr>
+    <tr>
+    <td style="padding-top: 10px; padding-bottom: 10px"><button class="btn iniciar">Iniciar</button></td><td style="padding-top: 10px; padding-bottom: 10px"><button class="btn parar">Parar</button></td>
+    </tr>
+    <tr>
+    <td colspan="2">
+    <span style="float: left; font-size: xx-small; font-weight: normal; padding-top: 10px;"><a href="#" class="donate">Donate</a></span>
+    </td>
+    </tr>
+  </tbody>
+<table>
+`
+document.querySelector('.shadedBG').appendChild(createEle('div',html,'vis content-border','colets'))
+document.querySelector('#colets').style.cssText = `margin-top: 200px; position: absolute; display: block`
+$('.iniciar').prop('disabled',true);
+$('.parar').prop('disabled',true);
 
-function resetar(){
-    total = JSON.parse(localStorage.getItem('TotalRecursoColetado'));
+try{
+    //-------------------------------------------Donate
+
+    let htm = `<div class="popup_box show" id="popup_box_twcheese-scavenge-preferences-popup" style="width: 366px;">
+                                <a class="popup_box_close tooltip-delayed" href="#" data-title="Fechado :: atalho de teclado: <b>Esc</b>">&nbsp;</a>
+                                <div class="popup_box_content">
+                                    <div class="qrcode">
+                                        <h3>Donate - Pix</h3>
+                                        <img src="https://i.ibb.co/KDSHfm7/image.png" width="366" heigth="366">
+                                    </div></div></div><div class="fader"></div>`
+
+
+    document.querySelector('.donate').addEventListener('click',function(){
+        document.querySelector('#ds_body').appendChild(createEle('div',htm,'popup_box_container'))
+        createClose();
+    })
+
+    function createClose(){
+        document.querySelector('.popup_box_close').addEventListener('click',function(){
+            document.querySelector('.popup_box_container').remove();
+        })
+    }
+
+    //---------------------------------------------------
+}
+catch(e){
+    console.log("Error Donate ",e)
+}
+
+if(JSON.parse(localStorage.getItem(`Media-${game_data.village.id}`)) != null){
+    let media = JSON.parse(localStorage.getItem(`Media-${game_data.village.id}`))
+    document.querySelector('.media').innerText = media.toLocaleString('pt-BR');
+}
+
+if(JSON.parse(localStorage.getItem('Ligado-Coleta')) != null){
+    ligado = JSON.parse(localStorage.getItem('Ligado-Coleta'))
+}else{
+    let stringJSONip = JSON.stringify(ligado);
+    localStorage.setItem('Ligado-Coleta', stringJSONip);
+}
+aviso();
+function aviso(){
+    if(ligado == false){
+        document.querySelector('.avisos').innerText = 'Parado'
+        document.querySelector('.avisos').style.cssText = "padding: 7px; width: 200px; font-weight: bold;"
+    }else{
+        document.querySelector('.avisos').innerText = 'Rodando'
+        document.querySelector('.avisos').style.cssText = "padding: 7px; width: 200px; font-weight: bold; color: green;"
+    }
 }
 
 function twcheese1(){
     javascript: (window.TwCheese && TwCheese.tryUseTool('ASS')) || $.ajax('https://cheesasaurus.github.io/twcheese/launch/ASS.js?' +~~((new Date())/3e5),{cache:1,dataType:"script"});void 0;
 }
+twcheese1();
 
-function timer1(segundos){
-    const data = new Date(segundos * 1000);
-    return data.toLocaleTimeString('pt-BR', { hour12: false, timeZone: 'UTC' })
-}
-function inicarTimer(){
-    hora = setInterval(function(){
-        ss++
-        timerRodando = JSON.stringify(ss);
-        localStorage.setItem('TimerRodando', timerRodando);
-        document.querySelector('.StatusLab').innerHTML = '<h5>RODANDO</h5>';
-        document.querySelector('.StatusLab').style.cssText += 'color: green;'
-    },1000)
-}
-
-//*************************** CRIANDO OS ELEMENTOS CONFIGURANDO E DANDO FUNÇÃO ***************************
-function html(){
-    let html = `<td class="opcoestd content-border border-frame-gold-red" style="margin-top: 200px; position: absolute;">
-      <table class="vis">
-            <tbody><tr class="border-frame-gold-red">
-              <td style="text-align: center; padding-top: 5px; padding-bottom: 2px; width: 290px" class="avisos" colspan="6"><h3>[Auto Coleta]</h3></td>
-            </tr>
-            <tr>
-              <td style="text-align: center; width: 5px;"><span class="icon header time"></span></td>
-              <td class="tempoD" colspan="2" style="text-align: center"><h5>${timer1(ss)}</h5></td>
-              <td style="text-align: center; width: 5px;"><span class="icon header ressources"></span></td>
-              <td class="totalD" colspan="2" style="text-align: center"><h5>${format2}</h5></td>
-            </tr>
-            <tr>
-              <td style="text-align: center;"><span class="icon header wood"> </span></td>
-              <td class="madeira" style="text-align: center; width: 60px;">${format3}</td>
-              <td style="text-align: center; width: 5px;"><span class="icon header stone"> </span></td>
-              <td class="argila" style="text-align: center; width: 60px;">${format3}</td>
-              <td style="text-align: center; width: 5px;"><span class="icon header iron"> </span></td>
-              <td class="ferro" style="text-align: center; width: 60px;">${format3}</td>
-            </tr>
-            <tr>
-              <td colspan="6" style="text-align: center; padding: 10px; width: 270px"><label class="StatusLab"><h5>PARADO</h5></label></td>
-            </tr>
-            <tr>
-              <td colspan="6" style="text-align: center; padding-bottom: 5px"><label class="statusLab">...</label></td>
-            </tr>
-            <tr>
-              <td style="text-align: center; padding: 10px;" colspan="6">
-    <button class="iniciarBtn btn" style="margin-right: 10px;">Iniciar</button>
-    <button class="pausarBtn btn" style="margin-right: 10px;">Pausar</button>
-    <button class="zerarBtn btn" style="margin-right: 10px;">Zerar</button>
-    <button class="confBtn btn">Igual</button>
-    <br><br>
-    <span style="float: right; font-size: xx-small; font-weight: normal;">Updated by WFox: v1.6</span>
-    <span style="float: left; font-size: xx-small; font-weight: normal;"><a href="#" class="donate">Donate</a></span>
-</td>
-            </tr>
-          </tbody></table>
-        </td>`
-    return html;
-    }
-document.querySelector('.shadedBG').appendChild(createEle('td',undefined,'opcoestd content-border border-frame-gold-red'))
-document.querySelector('.opcoestd').innerHTML = html();
-document.querySelector('.opcoestd').style.cssText = 'margin-top: 200px;'+'position: absolute;'
-
-//-------------------------------------------Donate
-
-let htm = `<div class="popup_box show" id="popup_box_twcheese-scavenge-preferences-popup" style="width: 366px;">
-    <a class="popup_box_close tooltip-delayed" href="#" data-title="Fechado :: atalho de teclado: <b>Esc</b>">&nbsp;</a>
-    <div class="popup_box_content">
-        <div class="qrcode">
-            <h3>Donate - Pix</h3>
-            <img src="https://i.ibb.co/KDSHfm7/image.png" width="366" heigth="366">
-        </div></div></div><div class="fader"></div>`
-
-
-document.querySelector('.donate').addEventListener('click',function(){
-    document.querySelector('#ds_body').appendChild(createEle('div',htm,'popup_box_container'))
-    createClose();
-})
-
-function createClose(){
-    document.querySelector('.popup_box_close').addEventListener('click',function(){
-        document.querySelector('.popup_box_container').remove();
-    })
-}
-
-//---------------------------------------------------
-
-function createEle(ele,texto = '',clas){
+function createEle(ele,texto = '',clas,id){
     let EleCriado = document.createElement(ele);
     EleCriado.innerHTML = texto;
     if(clas !== undefined) EleCriado.classList = clas;
+    if(id !== undefined) EleCriado.id = id;
     return EleCriado;
 }
-function html2(){
-    document.querySelector('.tempoD').querySelector('h5').innerHTML = `${timer1(ss)}`
-    document.querySelector('.totalD').querySelector('h5').innerHTML = `${format2}`
-    document.querySelector('.madeira').innerHTML = `${format3}`
-    document.querySelector('.argila').innerHTML = `${format3}`
-    document.querySelector('.ferro').innerHTML = `${format3}`
-}
-document.querySelector('.iniciarBtn').addEventListener('click',function(){
-    let stringJSON = JSON.stringify(1);
-    localStorage.setItem('AutoColeta', stringJSON);
-    if(teste){
-        verifica();
-    }
-})
-document.querySelector('.pausarBtn').addEventListener('click',function(){
-    let stringJSON = JSON.stringify(0);
-    localStorage.setItem('AutoColeta', stringJSON);
-    verifica();
-    teste = true;
-})
-document.querySelector('.zerarBtn').addEventListener('click',function(){
-    RecursosColetados = JSON.stringify(0);
-    localStorage.setItem('TotalRecursoColetado', RecursosColetados);
-    ss = 0;
-    timerRodando = JSON.stringify(ss);
-    localStorage.setItem('TimerRodando', timerRodando);
-    document.querySelector('.StatusLab').innerHTML = '<h5>ZERADO</h5>';
-    document.querySelector('.StatusLab').style.cssText += 'color: red;'
-    resetar();
-    format2 = (new Intl.NumberFormat('dec', { style: 'decimal' }).format(total));
-    html2();
+
+function media(i){
+    return new Promise((resolve) => {
+        let arr = document.querySelectorAll('.duration')[i].innerText.split(':')
+        let res = Number(document.querySelectorAll('.wood-value')[i].innerText.replace('.',''))+Number(document.querySelectorAll('.stone-value')[i].innerText.replace('.',''))+Number(document.querySelectorAll('.iron-value')[i].innerText.replace('.',''))
+        let h = Number(arr[0])*60*60;
+        let m = Number(arr[1])*60;
+        let s = Number(arr[2]);
+        let ss = h+m+s;
+        let coletas = {res: res,tempo: ss}
+      resolve(coletas);
     })
-document.querySelector('.confBtn').addEventListener('click',function(){
-    verificaconfbtn();
-})
-let status = JSON.parse(localStorage.getItem('Status'))
-if(status === null || status === undefined){
-    let stringJSON = JSON.stringify(1);
-    localStorage.setItem('Status', stringJSON)
-    confbtn = true;
-    localStorage.setItem('twcheese.userConfig', '{"props":{"ASS":{"troopsAssigner":{"mode":"sane_person","allowedOptionIds":[1,2,3,4],"targetDurationSeconds":7200,"troops":{"spear":{"maySend":true,"reserved":0},"sword":{"maySend":true,"reserved":0},"axe":{"maySend":true,"reserved":0},"light":{"maySend":true,"reserved":0},"heavy":{"maySend":true,"reserved":0},"knight":{"maySend":true,"reserved":0}},"troopOrder":[["axe","light","marcher"],["spear","sword","archer"],["heavy"],["knight"]]}}}}')
-    document.querySelector('.confBtn').innerText = 'Igual';
 }
-if(status === 1){
-    document.querySelector('.confBtn').innerText = 'Igual';
-    localStorage.setItem('twcheese.userConfig', localStorage.getItem('twcheese.userConfig').replace('sane_person','addict'))
-    document.querySelector('.confBtn').title = 'Mesmo Tempo de coleta em todos';
-    confbtn = true;
-}else if(status === 0){
-    document.querySelector('.confBtn').innerText = 'Maximo';
-    localStorage.setItem('twcheese.userConfig', localStorage.getItem('twcheese.userConfig').replace('addict','sane_person'))
-    document.querySelector('.confBtn').title = 'Coletar o Maximo possivel na melhor coleta';
-    confbtn = false;
+const timer = (ms) => {
+    return new Promise(res => setTimeout(res, ms))
 }
-
-function verificaconfbtn(){
-    status = JSON.parse(localStorage.getItem('Status'))
-    if(status === 0){
-        document.querySelector('.confBtn').innerText = 'Igual';
-        localStorage.setItem('twcheese.userConfig', localStorage.getItem('twcheese.userConfig').replace('sane_person','addict'))
-        let strJSON = JSON.stringify(1);
-        localStorage.setItem('Status', strJSON)
-        document.querySelector('.confBtn').title = 'Mesmo Tempo de coleta em todos';
-        confbtn = true;
-        console.log('Entrou no Status ',status)
-        location.reload();
-    }else if(status === 1){
-        document.querySelector('.confBtn').innerText = 'Maximo';
-        localStorage.setItem('twcheese.userConfig', localStorage.getItem('twcheese.userConfig').replace('addict','sane_person'))
-        let strJSON = JSON.stringify(0);
-        localStorage.setItem('Status', strJSON)
-        document.querySelector('.confBtn').title = 'Coletar o Maximo possivel na melhor coleta';
-        confbtn = false;
-        console.log('Entrou no Status ',status)
-        location.reload();
-    }
-}
-
-async function verifica(){
-    if(localStorage.getItem('AutoColeta') === '1'){
-        inicarTimer();
-        document.querySelector('.StatusLab').innerHTML = '<h5>RODANDO</h5>';
-        document.querySelector('.StatusLab').style.cssText += 'color: green;'
-        //total = JSON.parse(localStorage.getItem('TotalRecursoColetado'))
-        teste = false;
-        intervalo = true;
-        while(true){
-            await delayS(300);
-            if(document.readyState === 'complete'){
-                StartS();
-                break;
-            }
-        }
-    }else if(localStorage.getItem('AutoColeta') === '0'){
-        document.querySelector('.StatusLab').innerHTML = '<h5>PAUSADO</h5>';
-        document.querySelector('.StatusLab').style.cssText += 'color: red;'
-        clearInterval(hora);
-        clearInterval(intervalo2);
-        clearInterval(start)
-        intervalo = false;
-    }
-}
-function loading() {
-    return new Promise(async resolve => {
-        let teste = true;
-        while(teste){
-            if(document.querySelector('#loading_content').style.display === 'inline'){
-                console.log('Loading..')
-            }else{
-                resolve(teste = false);
-            }
-            await delayS(200);
-        }
-    });
-}
-verifica();
-
-function delayS(delayInms) {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve(2);
-        }, delayInms);
-    });
-}
-function inputTrop(){
-    let tropas = 0;
-    for(let itens of document.querySelectorAll('.unitsInput')){
-        if(itens.value !== ''){
-            tropas += parseInt(itens.value);
-        }
-        if(tropas>= 10){
-            return true;
-        }
-    }
-    return false;
-}
-function trops(){
-    for(let itens of document.querySelectorAll('.units-entry-all')){
-        if(parseInt(itens.innerText.replace(/[^0-9]/g,''))>= 10){
-            return true;
-        }
-    }
-    return false;
-}
-async function ClicaColeta(valor){
-    let teste = true;
-    return new Promise(async resolve => {
-        while(teste){
-            if(document.querySelectorAll('.free_send_button')[valor] !== null){
-                document.querySelectorAll('.free_send_button')[valor].click();
-                await loading();
-            }
-            if(document.querySelectorAll('.return-countdown')[valor] !== null){
-                total += parseInt(document.querySelectorAll('.wood-value')[valor].innerText) + parseInt(document.querySelectorAll('.stone-value')[valor].innerText) + parseInt(document.querySelectorAll('.iron-value')[valor].innerText);
-                RecursosColetados = JSON.stringify(total);
-                localStorage.setItem('TotalRecursoColetado', RecursosColetados);
-                resolve(teste = false);
-            }
-            await delayS(200);
-        }
-        });
-}
-
-async function StartS(){
-    var recaptcha = document.getElementsByClassName('recaptcha-checkbox-checkmark');
-    if (recaptcha.length != 0){
-        //document.documentElement.getElementsByClassName('recaptcha-checkbox-checkmark')[0].click();
-        document.querySelector('.statusLab').innerText = 'Capctha...';
-        let stringJSON = JSON.stringify(0);
-        localStorage.setItem('AutoColeta', stringJSON);
-        verifica();
-        teste = true;
-    }
-    intervalo2 = setInterval(function(){
-        totalDiv3 = Math.round(total / 3);
-        format3 = (new Intl.NumberFormat('dec', { style: 'decimal' }).format(totalDiv3));
-        format2 = (new Intl.NumberFormat('dec', { style: 'decimal' }).format(total));
-        html2();
-    },500)
-    while(intervalo){
-        if(document.querySelector('#loading_content').style.display === 'inline' && $('.return-countdown').find('a').length !== 0){
-            location.reload();
-        }
-        let unlock = 4 - document.querySelectorAll('.unlock-button').length - document.querySelectorAll('.unlock-countdown-text').length;
-        if(confbtn){
-            if(document.querySelectorAll('.return-countdown').length !== 0){document.querySelector('.statusLab').innerText = 'Esperando todas as coletas terminarem.';}
-            if(document.readyState === 'complete' && document.querySelectorAll('.return-countdown').length === 0 && document.querySelectorAll('.free_send_button').length === unlock){
-                twcheese1();
-                while(document.querySelectorAll('.free_send_button').length > 0){
-                let k = document.querySelectorAll('.free_send_button').length-1
-                console.log(k)
-                    if(inputTrop()){
-                        switch(k){
-                            case 3:
-                                console.log('Clicando em Extrema Coleta.')
-                                document.querySelector('.statusLab').innerText = 'Clicando em Extrema Coleta.';
-                                await ClicaColeta(k);
-                                break;
-                            case 2:
-                                console.log('Clicando em Grande Coleta.')
-                                document.querySelector('.statusLab').innerText = 'Clicando em Grande Coleta.';
-                                await ClicaColeta(k);
-                                break;
-                            case 1:
-                                console.log('Clicando em Média Coleta.')
-                                document.querySelector('.statusLab').innerText = 'Clicando em Média Coleta.';
-                                await ClicaColeta(k);
-                                break;
-                            case 0:
-                                console.log('Clicando em Pequena Coleta.')
-                                document.querySelector('.statusLab').innerText = 'Clicando em Pequena Coleta.';
-                                await ClicaColeta(k);
-                                break;
-                        }
+async function start(){
+        const coletasdisponiveis = document.querySelectorAll('.scavenge-option').length - document.querySelectorAll('.lock').length
+        if(document.querySelectorAll('.free_send_button').length == coletasdisponiveis){
+            twcheese1();
+            while(document.querySelectorAll('.free_send_button').length-1 >= 0){
+                const btn = document.querySelectorAll('.free_send_button').length-1
+                if(document.querySelector('#loading_content').style.display == 'none'){
+                    if(document.querySelectorAll('.unitsInput')[0].value + document.querySelectorAll('.unitsInput')[1].value + document.querySelectorAll('.unitsInput')[2].value +
+                       document.querySelectorAll('.unitsInput')[3].value + document.querySelectorAll('.unitsInput')[4].value + document.querySelectorAll('.unitsInput')[5].value > 10){
+                        const resultado = await media(btn);
+                        arr[btn].res = resultado.res
+                        arr[btn].tempo = resultado.tempo
+                        console.log(resultado)
+                        window.onload = document.querySelectorAll('.free_send_button')[btn].click();
                     }else{
-                        document.querySelector('.statusLab').innerText = 'Total de tropas menor que 10, não posso prosseguir.';
-                    }
-                    await delayS(100)
-                }
-            }
-        }else{
-            if(document.querySelectorAll('.return-countdown').length !== 0){document.querySelector('.statusLab').innerText = 'Esperando qualquer coleta terminar.';}
-            if(document.querySelectorAll('.return-countdown').length <= 4 && document.querySelectorAll('.free_send_button').length !== 0){
-                let k = document.querySelectorAll('.free_send_button').length-1
-                for(let units of document.querySelectorAll('.units-entry-all')){
-                    unii += parseInt(units.innerText.replace('(','').replace(')',''));
-                    console.log(total)
-                    if(unii >= 10){
-                        twcheese1();
-                        unii = 0;
+                        mediageral();
                     }
                 }
-                switch(k){
-                    case 3:
-                        if(inputTrop()){
-                            console.log('Clicando em Extrema Coleta.')
-                            document.querySelector('.statusLab').innerText = 'Clicando em Extrema Coleta.';
-                            await ClicaColeta(k);
-                        }
-                        break;
-                    case 2:
-                        if(inputTrop()){
-                            console.log('Clicando em Grande Coleta.')
-                            document.querySelector('.statusLab').innerText = 'Clicando em Grande Coleta.';
-                            await ClicaColeta(k);
-                        }
-                        break;
-                    case 1:
-                        if(inputTrop()){
-                            console.log('Clicando em Média Coleta.')
-                            document.querySelector('.statusLab').innerText = 'Clicando em Média Coleta.';
-                            await ClicaColeta(k);
-                        }
-                        break;
-                    case 0:
-                        if(inputTrop()){
-                            console.log('Clicando em Pequena Coleta.')
-                            document.querySelector('.statusLab').innerText = 'Clicando em Pequena Coleta.';
-                            await ClicaColeta(k);
-                        }
-                        break;
-                }
+                await timer(300)
             }
+            mediageral();
+            console.log(arr)
         }
-        await delayS(100);
+}
+function mediageral(){
+    if(arr[0].res != 0 || arr[1].res != 0 || arr[2].res != 0 || arr[3].res != 0){
+        const maiortemp = Math.max(arr[0].tempo,arr[1].tempo,arr[2].tempo,arr[3].tempo);
+        const qtx = Math.round(86400/maiortemp)
+        const totalres = arr[0].res + arr[1].res + arr[2].res + arr[3].res
+        const mediag = totalres * qtx
+        const stringJSONip = JSON.stringify(mediag);
+        console.log(mediag +' ---- '+ totalres * qtx)
+        localStorage.setItem(`Media-${game_data.village.id}`, stringJSONip);
+        document.querySelector('.media').innerText = mediag.toLocaleString('pt-BR');
+        clearInterval(intervalo);
     }
 }
-var duracao = Date.now() - antes;
-console.log('Terminou em ' + duracao + 'ms');
+
+document.querySelector('.iniciar').addEventListener('click',function(){
+    event.preventDefault()
+    ligado = true;
+    let stringJSONip = JSON.stringify(ligado);
+    localStorage.setItem('Ligado-Coleta', stringJSONip);
+    $('.iniciar').prop('disabled',true);
+    $('.parar').prop('disabled',false);
+    aviso();
+})
+document.querySelector('.parar').addEventListener('click',function(){
+    event.preventDefault()
+    ligado = false;
+    let stringJSONip = JSON.stringify(ligado);
+    localStorage.setItem('Ligado-Coleta', stringJSONip);
+    $('.parar').prop('disabled',true);
+    $('.iniciar').prop('disabled',false);
+    aviso();
+})
+
+setInterval(()=>{
+    if(ligado){
+        $('.iniciar').prop('disabled',true);
+        $('.parar').prop('disabled',false);
+        aviso();
+        let coletasdisponiveis = document.querySelectorAll('.scavenge-option').length - document.querySelectorAll('.lock').length
+        if(document.querySelectorAll('.free_send_button').length == coletasdisponiveis){
+            //console.log('estou pronto')
+            start();
+        }
+    }else{
+        $('.iniciar').prop('disabled',false);
+        $('.parar').prop('disabled',true);
+        aviso();
+    }
+},500)
