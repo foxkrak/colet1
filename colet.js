@@ -139,8 +139,8 @@ async function start(){
         const coletasdisponiveis = document.querySelectorAll('.scavenge-option').length - document.querySelectorAll('.lock').length
         if(document.querySelectorAll('.free_send_button').length == coletasdisponiveis){
             twcheese1();
+            loop = true;
             while(document.querySelectorAll('.free_send_button').length-1 >= 0){
-                loop = true;
                 const btn = document.querySelectorAll('.free_send_button').length-1
                 if(document.querySelector('#loading_content').style.display == 'none'){
                     if(document.querySelectorAll('.unitsInput')[0].value + document.querySelectorAll('.unitsInput')[1].value + document.querySelectorAll('.unitsInput')[2].value +
@@ -215,7 +215,6 @@ document.querySelector('.parar').addEventListener('click',function(){
 })
 
 setInterval(()=>{
-    verificaAldeias();
     if(ligado){
         $('.iniciar').prop('disabled',true);
         $('.parar').prop('disabled',false);
@@ -230,4 +229,5 @@ setInterval(()=>{
         $('.parar').prop('disabled',true);
         aviso();
     }
+    verificaAldeias();
 },1000)
