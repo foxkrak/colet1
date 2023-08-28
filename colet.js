@@ -65,19 +65,21 @@ function verificaAldeias(){
     if(JSON.parse(localStorage.getItem('aldeiasColet')) != null){
         aldeias = JSON.parse(localStorage.getItem('aldeiasColet'))
         for(let all of aldeias){
-            controleSoma += all.mediares;
+            if(all.tempo != null){
+                if(all.tempo > Timing.getCurrentServerTime()){
+                    controleSoma += all.mediares;
+                }
+            }
             /*if(game_data.village.id == all.villageID){
                 document.querySelector('.media').innerText = all.mediares.toLocaleString('pt-BR');
             }*/
-            if(Timing.getCurrentServerTime() >= all.tempo){
+            if(Timing.getCurrentServerTime() >= all.tempo && all.tempo != 0){
                 console.log(Timing.getCurrentServerTime()+" "+ all.tempo)
-                if(loop == false){
-                    if(window.location.href != window.location.origin + `/game.php?village=${all.villageID}&screen=place&mode=scavenge`){
-                        all.tempo = undefined;
-                        const stringJSONip = JSON.stringify(aldeias);
-                        localStorage.setItem(`aldeiasColet`, stringJSONip);
-                        window.location.href = window.location.origin + `/game.php?village=${all.villageID}&screen=place&mode=scavenge`;
-                    }
+                if(window.location.href != window.location.origin + `/game.php?village=${all.villageID}&screen=place&mode=scavenge`){
+                    all.tempo = 0;
+                    const stringJSONip = JSON.stringify(aldeias);
+                    localStorage.setItem(`aldeiasColet`, stringJSONip);
+                    window.location.href = window.location.origin + `/game.php?village=${all.villageID}&screen=place&mode=scavenge`;
                 }
             }
         }
@@ -159,6 +161,7 @@ async function start(){
             mediageral();
             console.log(arr)
         }
+    verificaAldeias();
 }
 function setararr(add,mediag,maiortemp){
     return new Promise((resolve) => {
@@ -176,6 +179,8 @@ function setararr(add,mediag,maiortemp){
                 tempo: maiortemp,
             })
         }
+        const stringJSONip = JSON.stringify(aldeias);
+        localStorage.setItem(`aldeiasColet`, stringJSONip);
         resolve();
     })
 }
@@ -188,9 +193,6 @@ async function mediageral(){
         const totalres = arr[0].res + arr[1].res + arr[2].res + arr[3].res
         const mediag = totalres * qtx
         await setararr(add,mediag,Timing.getCurrentServerTime()+maiortemp*1000);
-        const stringJSONip = JSON.stringify(aldeias);
-        localStorage.setItem(`aldeiasColet`, stringJSONip);
-        loop = false;
         document.querySelector('.media').innerText = mediag.toLocaleString('pt-BR');
     }
 }
@@ -219,15 +221,10 @@ setInterval(()=>{
         $('.iniciar').prop('disabled',true);
         $('.parar').prop('disabled',false);
         aviso();
-        let coletasdisponiveis = document.querySelectorAll('.scavenge-option').length - document.querySelectorAll('.lock').length
-        if(document.querySelectorAll('.free_send_button').length == coletasdisponiveis){
-            //console.log('estou pronto')
-            start();
-        }
+        start();
     }else{
         $('.iniciar').prop('disabled',false);
         $('.parar').prop('disabled',true);
         aviso();
     }
-    verificaAldeias();
 },1000)
