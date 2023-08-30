@@ -1,1 +1,1 @@
-const nicks = ['Foxkrak','junior72']
+nicks = ['Foxkrak','junior72']
